@@ -8,7 +8,19 @@
     <string name="edit_button">Edit</string>
     <string name="add_customer">Add Project</string>
     <string name="save_button">Save</string>
-    <string name="add_inventory_item">Add Item</string>
+    <string name="add_item">Add Item</string>
     <string name="add_room">Add Room</string>
+    <string name="project_create">Create Project</string>
+    <string name="project_edit">Edit Project</string>
+    <string name="project_view">View Project</string>
+    <string name="room_create">Create Room</string>
+    <string name="room_edit">Edit Room</string>
+    <string name="room_view">View Room</string>
+    <string name="item_create">Create Item</string>
+    <string name="item_edit">Edit Item</string>
+    <string name="item_view">View Item</string>
+    <string name="projects_list_header">Projects</string>
+    <string name="rooms_list_header">Rooms</string>
+    <string name="items_list_header">Room Inventory</string>
 
 </resources>

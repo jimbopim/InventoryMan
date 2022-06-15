@@ -1,4 +1,4 @@
-package com.jimla.birthdayreminder;
+package com.jimla.inventorymanager;
 
 import org.junit.Test;
 

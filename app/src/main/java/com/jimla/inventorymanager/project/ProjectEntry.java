@@ -1,4 +1,4 @@
-package com.jimla.birthdayreminder;
+package com.jimla.inventorymanager.project;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

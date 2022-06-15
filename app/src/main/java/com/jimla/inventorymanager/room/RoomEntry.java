@@ -1,4 +1,4 @@
-package com.jimla.birthdayreminder;
+package com.jimla.inventorymanager.room;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -7,11 +7,12 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "rooms")
 public class RoomEntry {
 
-    public RoomEntry(int id, int projectId, String name, String description, long entryTime) {
+    public RoomEntry(int id, int projectId, String name, String description, int floor, long entryTime) {
         this.id = id;
         this.projectId = projectId;
         this.name = name;
         this.description = description;
+        this.floor = floor;
         this.entryTime = entryTime;
     }
 
@@ -26,6 +27,9 @@ public class RoomEntry {
 
     @ColumnInfo(name = "description")
     public String description;
+
+    @ColumnInfo(name = "floor")
+    public int floor;
 
     @ColumnInfo(name = "entryTime")
     public long entryTime;

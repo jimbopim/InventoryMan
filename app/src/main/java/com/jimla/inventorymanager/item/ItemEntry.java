@@ -1,6 +1,4 @@
-package com.jimla.birthdayreminder;
-
-import android.graphics.Bitmap;
+package com.jimla.inventorymanager.item;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

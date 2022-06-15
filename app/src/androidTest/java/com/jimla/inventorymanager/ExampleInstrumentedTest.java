@@ -1,4 +1,4 @@
-package com.jimla.birthdayreminder;
+package com.jimla.inventorymanager;
 
 import android.content.Context;
 

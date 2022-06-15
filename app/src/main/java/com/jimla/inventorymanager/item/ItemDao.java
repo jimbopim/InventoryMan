@@ -1,4 +1,4 @@
-package com.jimla.birthdayreminder;
+package com.jimla.inventorymanager.item;
 
 import androidx.room.Dao;
 import androidx.room.Delete;

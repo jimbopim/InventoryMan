@@ -27,7 +27,7 @@
     <content url="file://$MODULE_DIR$/../../../app/src/testDebug" />
     <orderEntry type="jdk" jdkName="Android API 31 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="Birthday_Reminder.app.main" scope="TEST" />
+    <orderEntry type="module" module-name="Inventory_Manager.app.main" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.annotation:annotation:1.3.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.lifecycle:lifecycle-common:2.4.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.arch.core:core-common:2.1.0" level="project" />
@@ -98,5 +98,5 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.room:room-paging:2.4.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.room:room-testing:2.4.1@aar" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="Birthday_Reminder.app.main" />
+  <component name="TestModuleProperties" production-module="Inventory_Manager.app.main" />
 </module>

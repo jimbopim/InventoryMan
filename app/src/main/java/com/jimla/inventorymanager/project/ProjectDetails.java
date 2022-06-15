@@ -1,4 +1,4 @@
-package com.jimla.birthdayreminder;
+package com.jimla.inventorymanager.project;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +11,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jimla.inventorymanager.AppDatabase;
+import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.room.RoomActivity;
+
 import java.util.List;
 
 public class ProjectDetails extends AppCompatActivity {
 
+    private TextView projectDetailsHeader;
     private TextView projectName;
     private TextView description;
     private Button openRoomsButton;
@@ -96,7 +101,7 @@ public class ProjectDetails extends AppCompatActivity {
                 editButton.setVisibility(View.INVISIBLE);
                 createButton.setVisibility(View.VISIBLE);
                 openRoomsButton.setVisibility(View.INVISIBLE);
-                //createButton.setEnabled(true);
+                projectDetailsHeader.setText(getString(R.string.project_create));
                 break;
             case EDIT:
                 projectName.setFocusable(true);
@@ -105,7 +110,8 @@ public class ProjectDetails extends AppCompatActivity {
                 description.setFocusableInTouchMode(true);
                 createButton.setVisibility(View.INVISIBLE);
                 openRoomsButton.setVisibility(View.INVISIBLE);
-                //createButton.setEnabled(false);
+                deleteButton.setVisibility(View.VISIBLE);
+                projectDetailsHeader.setText(getString(R.string.project_edit));
                 editButton.setText(getString(R.string.save_button));
                 break;
             case VIEW:
@@ -115,16 +121,18 @@ public class ProjectDetails extends AppCompatActivity {
                 description.setFocusableInTouchMode(false);
                 createButton.setVisibility(View.INVISIBLE);
                 openRoomsButton.setVisibility(View.VISIBLE);
-                //createButton.setEnabled(false);
+                deleteButton.setVisibility(View.INVISIBLE);
+                projectDetailsHeader.setText(getString(R.string.project_view));
                 editButton.setText(getString(R.string.edit_button));
                 break;
         }
     }
 
     private void setupUI() {
+        projectDetailsHeader = findViewById(R.id.tvProjectDetailsHeader);
         projectName = findViewById(R.id.etProjectName);
         description = findViewById(R.id.etDescription);
-        openRoomsButton = findViewById(R.id.openInventoryButton);
+        openRoomsButton = findViewById(R.id.openItemsButton);
         createButton = findViewById(R.id.createButton);
         editButton = findViewById(R.id.editButton);
         deleteButton = findViewById(R.id.deleteButton);
@@ -246,18 +254,5 @@ public class ProjectDetails extends AppCompatActivity {
             projectName.setText(item.name);
             description.setText(item.description);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("debug", "onResume/ProjectDetails");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //finish();
-        Log.e("debug", "onStop/ProjectDetails");
     }
 }

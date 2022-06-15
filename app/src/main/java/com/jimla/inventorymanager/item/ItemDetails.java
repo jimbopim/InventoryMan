@@ -1,4 +1,4 @@
-package com.jimla.birthdayreminder;
+package com.jimla.inventorymanager.item;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,11 +19,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jimla.inventorymanager.AppDatabase;
+import com.jimla.inventorymanager.R;
+
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Random;
 
 public class ItemDetails extends AppCompatActivity {
 
+    private TextView itemDetailsHeader;
     private TextView itemName;
     private TextView itemDescription;
     private TextView itemRfid;
@@ -113,26 +118,27 @@ public class ItemDetails extends AppCompatActivity {
                 itemName.setFocusableInTouchMode(true);
                 itemDescription.setFocusable(true);
                 itemDescription.setFocusableInTouchMode(true);
-                itemRfid.setFocusable(true);
-                itemRfid.setFocusableInTouchMode(true);
+                itemRfid.setFocusable(false);
+                itemRfid.setFocusableInTouchMode(false);
                 photoButton.setVisibility(View.VISIBLE);
                 scanButton.setVisibility(View.VISIBLE);
                 deleteButton.setVisibility(View.INVISIBLE);
                 editButton.setVisibility(View.INVISIBLE);
                 createButton.setVisibility(View.VISIBLE);
-                //createButton.setEnabled(true);
+                itemDetailsHeader.setText(getString(R.string.item_create));
                 break;
             case EDIT:
                 itemName.setFocusable(true);
                 itemName.setFocusableInTouchMode(true);
                 itemDescription.setFocusable(true);
                 itemDescription.setFocusableInTouchMode(true);
-                itemRfid.setFocusable(true);
-                itemRfid.setFocusableInTouchMode(true);
+                itemRfid.setFocusable(false);
+                itemRfid.setFocusableInTouchMode(false);
                 createButton.setVisibility(View.INVISIBLE);
+                deleteButton.setVisibility(View.VISIBLE);
                 photoButton.setVisibility(View.VISIBLE);
                 scanButton.setVisibility(View.VISIBLE);
-                //createButton.setEnabled(false);
+                itemDetailsHeader.setText(getString(R.string.item_edit));
                 editButton.setText(getString(R.string.save_button));
                 break;
             case VIEW:
@@ -143,15 +149,17 @@ public class ItemDetails extends AppCompatActivity {
                 itemRfid.setFocusable(false);
                 itemRfid.setFocusableInTouchMode(false);
                 createButton.setVisibility(View.INVISIBLE);
-                //createButton.setEnabled(false);
+                deleteButton.setVisibility(View.INVISIBLE);
                 photoButton.setVisibility(View.INVISIBLE);
                 scanButton.setVisibility(View.INVISIBLE);
+                itemDetailsHeader.setText(getString(R.string.item_view));
                 editButton.setText(getString(R.string.edit_button));
                 break;
         }
     }
 
     private void setupUI() {
+        itemDetailsHeader = findViewById(R.id.tvItemDetailsHeader);
         itemName = findViewById(R.id.etProjectName);
         itemDescription = findViewById(R.id.etDescription);
         itemRfid = findViewById(R.id.rfid);
@@ -183,6 +191,18 @@ public class ItemDetails extends AppCompatActivity {
                     itemName.clearFocus();
                 }
                 return false;
+            }
+        });
+
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Random r = new Random();
+                int dummyRfid = r.nextInt(1000) + 1;
+                StringBuilder str = new StringBuilder(dummyRfid + "");
+                while(str.length() < 16)
+                    str.insert(0, "0");
+                itemRfid.setText(str);
             }
         });
 
@@ -281,7 +301,11 @@ public class ItemDetails extends AppCompatActivity {
             public void run() {
                 ItemEntry itemEntry = itemDao.loadById(itemId);
                 itemEntry.name = itemName.getText().toString();
-                //itemEntry.photo = photoBase64; //TODO Lägga till
+                itemEntry.rfid = itemRfid.getText().toString();
+                itemEntry.description = itemDescription.getText().toString();
+                if(photoBase64 != null)
+                    itemEntry.photo = photoBase64;
+
                 item = itemEntry;
                 itemDao.update(itemEntry);
 
@@ -307,9 +331,11 @@ public class ItemDetails extends AppCompatActivity {
             itemRfid.setText(item.rfid);
             itemDescription.setText(item.description);
 
-            byte[] decodedString = Base64.decode(item.photo, Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            imageView.setImageBitmap(decodedByte);
+            if(item.photo != null) {
+                byte[] decodedString = Base64.decode(item.photo, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                imageView.setImageBitmap(decodedByte);
+            }
         }
     }
 
@@ -340,18 +366,5 @@ public class ItemDetails extends AppCompatActivity {
 
             photoBase64 = Base64.encodeToString(bytes, Base64.DEFAULT);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("debug", "onResume/ItemDetails");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //finish();
-        Log.e("debug", "onStop/ItemDetails");
     }
 }

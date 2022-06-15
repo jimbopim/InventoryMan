@@ -1,4 +1,4 @@
-package com.jimla.birthdayreminder;
+package com.jimla.inventorymanager.item;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +11,14 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jimla.inventorymanager.AppDatabase;
+import com.jimla.inventorymanager.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryActivity extends AppCompatActivity implements InventoryAdapter.OnItemClickListener {
+public class ItemsActivity extends AppCompatActivity implements ItemsAdapter.OnItemClickListener {
 
     private ItemDao itemDao;
     private RecyclerView recyclerView;
@@ -27,13 +30,12 @@ public class InventoryActivity extends AppCompatActivity implements InventoryAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inventory);
+        setContentView(R.layout.activity_items);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 roomId = extras.getInt("roomId");
-                //loadItem();
             }
         } else {
             //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
@@ -55,7 +57,7 @@ public class InventoryActivity extends AppCompatActivity implements InventoryAda
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(),
                 DividerItemDecoration.VERTICAL));
-        InventoryAdapter.ViewHolder.setOnItemClickListener(this);
+        ItemsAdapter.ViewHolder.setOnItemClickListener(this);
     }
 
     private void initUI() {
@@ -63,7 +65,7 @@ public class InventoryActivity extends AppCompatActivity implements InventoryAda
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(InventoryActivity.this, ItemDetails.class);
+                Intent intent = new Intent(ItemsActivity.this, ItemDetails.class);
                 intent.putExtra("roomId", roomId);
 
                 startActivity(intent);
@@ -74,7 +76,7 @@ public class InventoryActivity extends AppCompatActivity implements InventoryAda
     @Override
     public void onItemClick(int position) {
 
-        Intent intent = new Intent(InventoryActivity.this, ItemDetails.class);
+        Intent intent = new Intent(ItemsActivity.this, ItemDetails.class);
         intent.putExtra("itemId", items.get(position));
 
         startActivity(intent);
@@ -83,15 +85,8 @@ public class InventoryActivity extends AppCompatActivity implements InventoryAda
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("debug", "onResume/InventoryActivity");
+        Log.e("debug", "onResume/ItemsActivity");
         setAdapter();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //finish();
-        Log.e("debug", "onStop/InventoryActivity");
     }
 
     private void setAdapter() {
@@ -111,7 +106,7 @@ public class InventoryActivity extends AppCompatActivity implements InventoryAda
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        recyclerView.setAdapter(new InventoryAdapter(names, rfid));
+                        recyclerView.setAdapter(new ItemsAdapter(names, rfid));
                     }
                 });
             }

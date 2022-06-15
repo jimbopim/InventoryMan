@@ -3,4 +3,5 @@
     <dimen name="list_item_height">20dp</dimen>
     <dimen name="margin_small">2dp</dimen>
     <dimen name="margin_medium">10dp</dimen>
+    <dimen name="details_header_text_size">28sp</dimen>
 </resources>

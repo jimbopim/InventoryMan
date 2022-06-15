@@ -5,5 +5,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Birthday Reminder"
+rootProject.name = "Inventory Manager"
 include ':app'

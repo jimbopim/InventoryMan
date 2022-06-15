@@ -1,4 +1,4 @@
-package com.jimla.birthdayreminder;
+package com.jimla.inventorymanager.item;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +7,11 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jimla.inventorymanager.R;
+
 import java.util.ArrayList;
 
-public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.ViewHolder> {
+public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
 
     interface OnItemClickListener {
         void onItemClick(int position);
@@ -62,7 +64,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
      * by RecyclerView.
      * @param dataSetRfid
      */
-    public InventoryAdapter(ArrayList<String> dataSetNames, ArrayList<String> dataSetRfid) {
+    public ItemsAdapter(ArrayList<String> dataSetNames, ArrayList<String> dataSetRfid) {
         localDataSetNames = dataSetNames;
         localDataSetRfid = dataSetRfid;
     }

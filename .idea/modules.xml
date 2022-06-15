@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Birthday_Reminder.iml" filepath="$PROJECT_DIR$/.idea/modules/Birthday_Reminder.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Birthday_Reminder.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Birthday_Reminder.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Birthday_Reminder.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Birthday_Reminder.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Birthday_Reminder.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Birthday_Reminder.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Birthday_Reminder.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Birthday_Reminder.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Inventory_Manager.iml" filepath="$PROJECT_DIR$/.idea/modules/Inventory_Manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.unitTest.iml" />
     </modules>
   </component>
 </project>

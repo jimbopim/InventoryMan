@@ -1,4 +1,4 @@
-package com.jimla.birthdayreminder;
+package com.jimla.inventorymanager.room;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,15 +7,22 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.jimla.inventorymanager.AppDatabase;
+import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.item.ItemsActivity;
 
 import java.util.List;
 
 public class RoomDetails extends AppCompatActivity {
 
+    private TextView roomDetailsHeader;
     private TextView projectName;
+    private NumberPicker floorPicker;
     private TextView description;
     private Button openRoomsButton;
     private Button createButton;
@@ -98,7 +105,10 @@ public class RoomDetails extends AppCompatActivity {
                 editButton.setVisibility(View.INVISIBLE);
                 createButton.setVisibility(View.VISIBLE);
                 openRoomsButton.setVisibility(View.INVISIBLE);
-                //createButton.setEnabled(true);
+                floorPicker.setFocusable(true);
+                floorPicker.setFocusableInTouchMode(true);
+                floorPicker.setEnabled(true);
+                roomDetailsHeader.setText(getString(R.string.room_create));
                 break;
             case EDIT:
                 projectName.setFocusable(true);
@@ -107,7 +117,11 @@ public class RoomDetails extends AppCompatActivity {
                 description.setFocusableInTouchMode(true);
                 createButton.setVisibility(View.INVISIBLE);
                 openRoomsButton.setVisibility(View.INVISIBLE);
-                //createButton.setEnabled(false);
+                deleteButton.setVisibility(View.VISIBLE);
+                floorPicker.setFocusable(true);
+                floorPicker.setFocusableInTouchMode(true);
+                roomDetailsHeader.setText(getString(R.string.room_edit));
+                floorPicker.setEnabled(true);
                 editButton.setText(getString(R.string.save_button));
                 break;
             case VIEW:
@@ -117,16 +131,22 @@ public class RoomDetails extends AppCompatActivity {
                 description.setFocusableInTouchMode(false);
                 createButton.setVisibility(View.INVISIBLE);
                 openRoomsButton.setVisibility(View.VISIBLE);
-                //createButton.setEnabled(false);
+                deleteButton.setVisibility(View.INVISIBLE);
+                roomDetailsHeader.setText(getString(R.string.room_view));
+                floorPicker.setFocusable(false);
+                floorPicker.setFocusableInTouchMode(false);
+                floorPicker.setEnabled(false);
                 editButton.setText(getString(R.string.edit_button));
                 break;
         }
     }
 
     private void setupUI() {
+        roomDetailsHeader = findViewById(R.id.tvRoomDetailsHeader);
         projectName = findViewById(R.id.etProjectName);
+        floorPicker = findViewById(R.id.floorPicker);
         description = findViewById(R.id.etDescription);
-        openRoomsButton = findViewById(R.id.openInventoryButton);
+        openRoomsButton = findViewById(R.id.openItemsButton);
         createButton = findViewById(R.id.createButton);
         editButton = findViewById(R.id.editButton);
         deleteButton = findViewById(R.id.deleteButton);
@@ -144,7 +164,7 @@ public class RoomDetails extends AppCompatActivity {
         openRoomsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RoomDetails.this, InventoryActivity.class);
+                Intent intent = new Intent(RoomDetails.this, ItemsActivity.class);
                 intent.putExtra("roomId", roomId);
 
                 startActivity(intent);
@@ -185,6 +205,26 @@ public class RoomDetails extends AppCompatActivity {
                 }).start();
             }
         });
+
+        int max = 60;
+        String[] choices = new String[max];
+        choices[10] = "Not selected";
+
+        for(int i = -10; i < max - 10; i++) {
+            if(i < 0)
+                choices[i + 10] = "Basement floor " + Math.abs(i);
+            else if(i == 0)
+                choices[i + 10] = "Not selected";
+            else if(i == 1)
+                choices[i + 10] = "Ground floor";
+            else
+                choices[i + 10] = "Floor " + (i - 1);
+        }
+        floorPicker.setMinValue(0);
+        floorPicker.setMaxValue(max - 1);
+        floorPicker.setDisplayedValues(choices);
+        floorPicker.setValue(10);
+        floorPicker.setWrapSelectorWheel(false);
     }
 
     private void createItem() {
@@ -200,7 +240,7 @@ public class RoomDetails extends AppCompatActivity {
                 }
                 highestId = highestId + 1;
 
-                RoomEntry roomEntry = new RoomEntry(highestId, projectId, projectName.getText().toString(), description.getText().toString(), System.currentTimeMillis());
+                RoomEntry roomEntry = new RoomEntry(highestId, projectId, projectName.getText().toString(), description.getText().toString(), floorPicker.getValue(), System.currentTimeMillis());
                 try {
                     roomDao.insert(roomEntry);
                 } catch (Exception e) {
@@ -224,6 +264,7 @@ public class RoomDetails extends AppCompatActivity {
                 RoomEntry itemEntry = roomDao.loadById(roomId);
                 itemEntry.name = projectName.getText().toString();
                 itemEntry.description = description.getText().toString();
+                itemEntry.floor = floorPicker.getValue();
 
                 item = itemEntry;
                 roomDao.update(itemEntry);
@@ -248,19 +289,7 @@ public class RoomDetails extends AppCompatActivity {
         if (item != null) {
             projectName.setText(item.name);
             description.setText(item.description);
+            floorPicker.setValue(item.floor);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("debug", "onResume/RoomDetails");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //finish();
-        Log.e("debug", "onStop/RoomDetails");
     }
 }
