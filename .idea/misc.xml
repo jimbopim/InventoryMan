@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_customer.xml" value="0.2625" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_customer_details.xml" value="0.2695035460992908" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_inventory.xml" value="0.2667572463768116" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_item_create.xml" value="0.2667572463768116" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_item_details.xml" value="0.2667572463768116" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_item_details_edit.xml" value="0.2667572463768116" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_item_details_view.xml" value="0.2667572463768116" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_main.xml" value="0.2667572463768116" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_project.xml" value="0.2776268115942029" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_project_details.xml" value="0.2776268115942029" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_room.xml" value="0.2667572463768116" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_room_details.xml" value="0.2695035460992908" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/main.xml" value="0.2667572463768116" />
+        <entry key="..\:/Users/719917/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/main_row_item.xml" value="0.2667572463768116" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.346875" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/drawable/divider.xml" value="0.346875" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/drawable/ic_launcher_background.xml" value="0.346875" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_add_contact.xml" value="0.3307291666666667" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_contact_create.xml" value="0.32135416666666666" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_contact_details.xml" value="0.33" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_contact_details_alt.xml" value="0.309375" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_contact_details_edit.xml" value="0.25" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_detail.xml" value="0.3307291666666667" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_listview.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_main.xml" value="0.3307291666666667" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/activity_main_listview.xml" value="0.3307291666666667" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/fragment_blank.xml" value="0.5541666666666667" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/fragment_item_list.xml" value="0.31666666666666665" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/layout.xml" value="0.5401041666666667" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/main_row_item.xml" value="0.3307291666666667" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/layout/text_row_item.xml" value="0.3234375" />
+        <entry key="..\:/Users/jimla/AndroidStudioProjects/BirthdayReminder/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3255208333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
