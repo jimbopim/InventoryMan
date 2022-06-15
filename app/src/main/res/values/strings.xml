@@ -6,7 +6,7 @@
     <string name="createButton">Create</string>
     <string name="delete_button">Delete</string>
     <string name="edit_button">Edit</string>
-    <string name="add_customer">Add Project</string>
+    <string name="add_project">Add Project</string>
     <string name="save_button">Save</string>
     <string name="add_item">Add Item</string>
     <string name="add_room">Add Room</string>
