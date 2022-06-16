@@ -174,9 +174,9 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
 
     private void setupUI() {
         itemDetailsHeader = findViewById(R.id.tvItemDetailsHeader);
-        itemName = findViewById(R.id.etProjectName);
+        itemName = findViewById(R.id.etItemName);
         itemDescription = findViewById(R.id.etDescription);
-        itemRfid = findViewById(R.id.rfid);
+        itemRfid = findViewById(R.id.etRfid);
         conditionSpinner = findViewById(R.id.spCondition);
         photoButton = findViewById(R.id.photoButton);
         scanButton = findViewById(R.id.scanButton);
@@ -279,7 +279,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
             }
         });
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.pref_condition));
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, getResources().getStringArray(R.array.pref_condition));
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         conditionSpinner.setAdapter(dataAdapter);
         conditionSpinner.setSelection(0, false);

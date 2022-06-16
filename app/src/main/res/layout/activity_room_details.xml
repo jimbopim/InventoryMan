@@ -18,17 +18,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/etProjectName"
-        android:layout_width="wrap_content"
+        android:id="@+id/etRoomName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
         android:focusable="false"
-        android:hint="Name"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:minHeight="48dp"
         android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRoomDetailsHeader" />
 
@@ -43,22 +44,24 @@
 
     <EditText
         android:id="@+id/etDescription"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:focusable="false"
         android:gravity="start|top"
-        android:hint="Description"
         android:inputType="textMultiLine"
         android:minHeight="48dp"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/etProjectName"
-        app:layout_constraintTop_toBottomOf="@+id/etProjectName" />
+        app:layout_constraintEnd_toEndOf="@+id/etRoomName"
+        app:layout_constraintStart_toStartOf="@+id/etRoomName"
+        app:layout_constraintTop_toBottomOf="@+id/etRoomName" />
 
     <Button
         android:id="@+id/createButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="Create"
         app:backgroundTint="@color/light_blue"
@@ -90,13 +93,37 @@
 
     <Button
         android:id="@+id/openItemsButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
         android:text="Open Inventory"
         app:backgroundTint="@color/light_blue"
         app:layout_constraintBottom_toTopOf="@+id/createButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Name"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/etRoomName"
+        app:layout_constraintStart_toStartOf="@+id/etRoomName"
+        app:layout_constraintTop_toTopOf="@+id/etRoomName" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Description"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/etDescription"
+        app:layout_constraintStart_toStartOf="@+id/etDescription"
+        app:layout_constraintTop_toTopOf="@+id/etDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,7 +21,7 @@ import java.util.List;
 public class RoomDetails extends AppCompatActivity {
 
     private TextView roomDetailsHeader;
-    private TextView projectName;
+    private TextView roomName;
     private NumberPicker floorPicker;
     private TextView description;
     private Button openRoomsButton;
@@ -97,8 +97,8 @@ public class RoomDetails extends AppCompatActivity {
 
         switch (mode) {
             case CREATE:
-                projectName.setFocusable(true);
-                projectName.setFocusableInTouchMode(true);
+                roomName.setFocusable(true);
+                roomName.setFocusableInTouchMode(true);
                 description.setFocusable(true);
                 description.setFocusableInTouchMode(true);
                 deleteButton.setVisibility(View.INVISIBLE);
@@ -111,8 +111,8 @@ public class RoomDetails extends AppCompatActivity {
                 roomDetailsHeader.setText(getString(R.string.room_create));
                 break;
             case EDIT:
-                projectName.setFocusable(true);
-                projectName.setFocusableInTouchMode(true);
+                roomName.setFocusable(true);
+                roomName.setFocusableInTouchMode(true);
                 description.setFocusable(true);
                 description.setFocusableInTouchMode(true);
                 createButton.setVisibility(View.INVISIBLE);
@@ -125,8 +125,8 @@ public class RoomDetails extends AppCompatActivity {
                 editButton.setText(getString(R.string.save_button));
                 break;
             case VIEW:
-                projectName.setFocusable(false);
-                projectName.setFocusableInTouchMode(false);
+                roomName.setFocusable(false);
+                roomName.setFocusableInTouchMode(false);
                 description.setFocusable(false);
                 description.setFocusableInTouchMode(false);
                 createButton.setVisibility(View.INVISIBLE);
@@ -143,7 +143,7 @@ public class RoomDetails extends AppCompatActivity {
 
     private void setupUI() {
         roomDetailsHeader = findViewById(R.id.tvRoomDetailsHeader);
-        projectName = findViewById(R.id.etProjectName);
+        roomName = findViewById(R.id.etRoomName);
         floorPicker = findViewById(R.id.floorPicker);
         description = findViewById(R.id.etDescription);
         openRoomsButton = findViewById(R.id.openItemsButton);
@@ -151,11 +151,11 @@ public class RoomDetails extends AppCompatActivity {
         editButton = findViewById(R.id.editButton);
         deleteButton = findViewById(R.id.deleteButton);
 
-        projectName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        roomName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    projectName.clearFocus();
+                    roomName.clearFocus();
                 }
                 return false;
             }
@@ -240,7 +240,7 @@ public class RoomDetails extends AppCompatActivity {
                 }
                 highestId = highestId + 1;
 
-                RoomEntry roomEntry = new RoomEntry(highestId, projectId, projectName.getText().toString(), description.getText().toString(), floorPicker.getValue(), System.currentTimeMillis());
+                RoomEntry roomEntry = new RoomEntry(highestId, projectId, roomName.getText().toString(), description.getText().toString(), floorPicker.getValue(), System.currentTimeMillis());
                 try {
                     roomDao.insert(roomEntry);
                 } catch (Exception e) {
@@ -262,7 +262,7 @@ public class RoomDetails extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 RoomEntry itemEntry = roomDao.loadById(roomId);
-                itemEntry.name = projectName.getText().toString();
+                itemEntry.name = roomName.getText().toString();
                 itemEntry.description = description.getText().toString();
                 itemEntry.floor = floorPicker.getValue();
 
@@ -287,7 +287,7 @@ public class RoomDetails extends AppCompatActivity {
 
     private void updateFieldsFromItem() {
         if (item != null) {
-            projectName.setText(item.name);
+            roomName.setText(item.name);
             description.setText(item.description);
             floorPicker.setValue(item.floor);
         }
