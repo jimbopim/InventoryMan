@@ -23,4 +23,12 @@
     <string name="rooms_list_header">Rooms</string>
     <string name="items_list_header">Room Inventory</string>
 
+    <string-array name="pref_condition">
+        <item>Perfect</item>
+        <item>Good</item>
+        <item>Worn</item>
+        <item>Damaged</item>
+        <item>Badly damaged</item>
+    </string-array>
+
 </resources>

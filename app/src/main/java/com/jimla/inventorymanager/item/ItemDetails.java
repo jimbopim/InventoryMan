@@ -11,45 +11,57 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jimla.inventorymanager.AppDatabase;
 import com.jimla.inventorymanager.R;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class ItemDetails extends AppCompatActivity {
+public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnItemClickListener  {
 
     private TextView itemDetailsHeader;
     private TextView itemName;
     private TextView itemDescription;
     private TextView itemRfid;
+    private Spinner conditionSpinner;
     private Button scanButton;
     private Button photoButton;
     private Button createButton;
     private Button deleteButton;
     private Button editButton;
 
+    private RecyclerView recyclerViewImages;
+    private final HashMap<Integer, Integer> items = new HashMap<>();
+
     private ItemDao itemDao;
     private ItemEntry item;
 
+    private ImageDao imageDao;
+
     private static final int CAMERA_REQUEST = 1888;
-    private ImageView imageView;
+    //private ImageView imageView;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
 
     private int itemId = 0;
     private int projectId = 0;
     private int roomId = 0;
 
-    String photoBase64 = null;
+    ArrayList<String> photoBase64 = new ArrayList<>();
 
     private Mode mode;
 
@@ -77,6 +89,7 @@ public class ItemDetails extends AppCompatActivity {
             //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
         }
 
+        initRecyclerView();
         setupUI();
 
         if (itemId == 0) {
@@ -91,6 +104,7 @@ public class ItemDetails extends AppCompatActivity {
         AppDatabase db = AppDatabase.getDatabaseInstance(getApplicationContext(), getString(R.string.db_name));
 
         itemDao = db.itemDao();
+        imageDao = db.imageDao();
     }
 
     private void loadItem() {
@@ -163,9 +177,10 @@ public class ItemDetails extends AppCompatActivity {
         itemName = findViewById(R.id.etProjectName);
         itemDescription = findViewById(R.id.etDescription);
         itemRfid = findViewById(R.id.rfid);
+        conditionSpinner = findViewById(R.id.spCondition);
         photoButton = findViewById(R.id.photoButton);
         scanButton = findViewById(R.id.scanButton);
-        imageView = findViewById(R.id.imageView);
+        //imageView = findViewById(R.id.imageView);
         createButton = findViewById(R.id.createButton2);
         editButton = findViewById(R.id.editButton2);
         deleteButton = findViewById(R.id.deleteButton2);
@@ -263,26 +278,86 @@ public class ItemDetails extends AppCompatActivity {
                 }).start();
             }
         });
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.pref_condition));
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        conditionSpinner.setAdapter(dataAdapter);
+        conditionSpinner.setSelection(0, false);
+    }
+
+    private void initRecyclerView() {
+        recyclerViewImages = findViewById(R.id.recyclerViewImages);
+        recyclerViewImages.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewImages.addItemDecoration(new DividerItemDecoration(getApplicationContext(),
+                DividerItemDecoration.VERTICAL));
+        ImagesAdapter.ViewHolder.setOnItemClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setAdapter();
+    }
+
+    private void setAdapter() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Bitmap> images = new ArrayList<>();
+
+                if(mode == Mode.CREATE) {
+                    for(String photo : photoBase64) {
+                        byte[] decodedString = Base64.decode(photo, Base64.DEFAULT);
+                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+                        images.add(decodedByte);
+                    }
+                }
+                else {
+                    List<ImageEntry> imageEntries = imageDao.loadByItemId(itemId);
+
+                    for (ImageEntry e : imageEntries) {
+                        byte[] decodedString = Base64.decode(e.photo, Base64.DEFAULT);
+                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+                        images.add(decodedByte);
+                    }
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerViewImages.setAdapter(new ImagesAdapter(images));
+                    }
+                });
+            }
+        });
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+/*
+        Intent intent = new Intent(ItemDetails.this, dsad.class);
+        intent.putExtra("itemId", items.get(position));
+
+        startActivity(intent);*/
     }
 
     private void createItem() {
         Thread thread = new Thread(new Runnable() {
             public void run() {
 
-                List<ItemEntry> users = itemDao.getAll();
-
-                int highestId = 0;
-                for (ItemEntry c : users) {
-                    if (c.id > highestId)
-                        highestId = c.id;
-                }
-                highestId = highestId + 1;
-
-                ItemEntry itemEntry = new ItemEntry(highestId, roomId, itemName.getText().toString(), itemRfid.getText().toString(), itemDescription.getText().toString(), photoBase64, System.currentTimeMillis());
-                try {
-                    itemDao.insert(itemEntry);
-                } catch (Exception e) {
-                    Log.e("error", "Duplicate key");
+                int id = writeItem();
+                if(id > 0) {
+                    for(String photo : photoBase64)
+                        writeImage(id, photo);
                 }
 
                 finish();
@@ -296,6 +371,47 @@ public class ItemDetails extends AppCompatActivity {
         }
     }
 
+    private int writeItem() {
+        List<ItemEntry> users = itemDao.getAll();
+
+        int highestId = 0;
+        for (ItemEntry c : users) {
+            if (c.id > highestId)
+                highestId = c.id;
+        }
+        highestId = highestId + 1;
+
+        ItemEntry itemEntry = new ItemEntry(highestId, roomId, itemName.getText().toString(), itemRfid.getText().toString(), itemDescription.getText().toString(), System.currentTimeMillis());
+
+        try {
+            itemDao.insert(itemEntry);
+            return highestId;
+        } catch (Exception e) {
+            Log.e("error", "Duplicate key");
+        }
+        return -1;
+    }
+
+    private void writeImage(int id, String photo) {
+        List<ImageEntry> images = imageDao.getAll();
+
+        int highestId = 0;
+        for (ImageEntry c : images) {
+            if (c.id > highestId)
+                highestId = c.id;
+        }
+        highestId = highestId + 1;
+
+        ImageEntry imageEntry = new ImageEntry(highestId, id, itemDescription.getText().toString(), photo, System.currentTimeMillis());
+
+        try {
+            imageDao.insert(imageEntry);
+        } catch (Exception e) {
+            Log.e("error", "Duplicate key");
+        }
+
+    }
+
     private void updateItem() {
         Thread thread = new Thread(new Runnable() {
             public void run() {
@@ -303,8 +419,8 @@ public class ItemDetails extends AppCompatActivity {
                 itemEntry.name = itemName.getText().toString();
                 itemEntry.rfid = itemRfid.getText().toString();
                 itemEntry.description = itemDescription.getText().toString();
-                if(photoBase64 != null)
-                    itemEntry.photo = photoBase64;
+/*                if(photoBase64 != null)
+                    itemEntry.photo = photoBase64;*/
 
                 item = itemEntry;
                 itemDao.update(itemEntry);
@@ -331,11 +447,11 @@ public class ItemDetails extends AppCompatActivity {
             itemRfid.setText(item.rfid);
             itemDescription.setText(item.description);
 
-            if(item.photo != null) {
+/*            if(item.photo != null) {
                 byte[] decodedString = Base64.decode(item.photo, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                imageView.setImageBitmap(decodedByte);
-            }
+                //imageView.setImageBitmap(decodedByte);
+            }*/
         }
     }
 
@@ -358,13 +474,29 @@ public class ItemDetails extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(photo);
+            //imageView.setImageBitmap(photo);
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] bytes = byteArrayOutputStream .toByteArray();
 
-            photoBase64 = Base64.encodeToString(bytes, Base64.DEFAULT);
+            String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
+            if(mode == Mode.CREATE)
+                photoBase64.add(base64);
+            else if(mode == Mode.EDIT) {
+                Thread thread = new Thread(new Runnable() {
+                    public void run() {
+                        writeImage(itemId, base64);
+                    }
+                });
+                thread.start();
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            setAdapter();
         }
     }
 }
