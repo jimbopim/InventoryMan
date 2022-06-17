@@ -1,8 +1,11 @@
 package com.jimla.inventorymanager.item;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -148,11 +151,22 @@ public class ImageDetails extends AppCompatActivity {
         }
     }
 
+    private Bitmap getImageFromStorage(String path) {
+        Uri imageUri = Uri.parse(path);
+        Bitmap bitmap = null;
+        ContentResolver contentResolver = getContentResolver();
+        try {
+            ImageDecoder.Source source = ImageDecoder.createSource(contentResolver, imageUri);
+            bitmap = ImageDecoder.decodeBitmap(source);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
     private void updateFieldsFromItem() {
         if (item != null) {
-            byte[] decodedString = Base64.decode(item.photo, Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            imageView.setImageBitmap(decodedByte);
+            imageView.setImageBitmap(getImageFromStorage(item.photo));
 
             description.setText(item.description);
         }

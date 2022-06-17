@@ -70,7 +70,8 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
     private int projectId = 0;
     private int roomId = 0;
 
-    ArrayList<String> photoBase64 = new ArrayList<>();
+    //ArrayList<String> photoBase64 = new ArrayList<>();
+    ArrayList<String> photoUris = new ArrayList<>();
 
     private Mode mode;
 
@@ -303,21 +304,15 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
                 ArrayList<Bitmap> images = new ArrayList<>();
 
                 if (mode == Mode.CREATE) {
-                    for (String photo : photoBase64) {
-                        byte[] decodedString = Base64.decode(photo, Base64.DEFAULT);
-                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
-                        images.add(decodedByte);
+                    for (String photo : photoUris) {
+                        images.add(getImageFromStorage(photo));
                     }
                 } else {
                     List<ImageEntry> imageEntries = imageDao.loadByItemId(itemId);
                     int listIndex = 0;
                     for (ImageEntry e : imageEntries) {
                         items.put(listIndex++, e.id);
-                        byte[] decodedString = Base64.decode(e.photo, Base64.DEFAULT);
-                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
-                        images.add(decodedByte);
+                        images.add(getImageFromStorage(e.photo));
                     }
                 }
 
@@ -352,7 +347,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
 
                 int id = writeItem();
                 if (id > 0) {
-                    for (String photo : photoBase64)
+                    for (String photo : photoUris)
                         writeImage(id, photo);
                 }
 
@@ -468,30 +463,13 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            String path = "file://" + currentPhotoPath;
-            Uri imageUri = Uri.parse(path);
-            Bitmap bitmap = null;
-            ContentResolver contentResolver = getContentResolver();
-            try {
-                ImageDecoder.Source source = ImageDecoder.createSource(contentResolver, imageUri);
-                bitmap = ImageDecoder.decodeBitmap(source);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-/*            Bundle extras = data.getExtras();
-            Bitmap capturedPhotoThumbnail = (Bitmap) extras.get("data");*/
 
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] bytes = byteArrayOutputStream.toByteArray();
-
-            String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
             if (mode == Mode.CREATE)
-                photoBase64.add(base64);
+                photoUris.add(currentPhotoPath);
             else if (mode == Mode.EDIT) {
                 Thread thread = new Thread(new Runnable() {
                     public void run() {
-                        writeImage(itemId, base64);
+                        writeImage(itemId, currentPhotoPath);
                     }
                 });
                 thread.start();
@@ -503,6 +481,19 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
             }
             setAdapter();
         }
+    }
+
+    private Bitmap getImageFromStorage(String path) {
+        Uri imageUri = Uri.parse(path);
+        Bitmap bitmap = null;
+        ContentResolver contentResolver = getContentResolver();
+        try {
+            ImageDecoder.Source source = ImageDecoder.createSource(contentResolver, imageUri);
+            bitmap = ImageDecoder.decodeBitmap(source);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 
     private void dispatchTakePictureIntent() {
@@ -542,7 +533,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
+        currentPhotoPath = "file://" + image.getAbsolutePath();
         return image;
     }
 }
