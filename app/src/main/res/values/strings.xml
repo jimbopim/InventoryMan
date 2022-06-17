@@ -22,6 +22,7 @@
     <string name="projects_list_header">Projects</string>
     <string name="rooms_list_header">Rooms</string>
     <string name="items_list_header">Room Inventory</string>
+    <string name="take_photo">Photo</string>
 
     <string-array name="pref_condition">
         <item>Perfect</item>

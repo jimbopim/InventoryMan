@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jimla.inventorymanager">
     <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +25,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.jimla.inventorymanager.project.ProjectDetails">
+        </activity>
+        <activity
             android:name="com.jimla.inventorymanager.room.RoomActivity">
         </activity>
         <activity
@@ -34,9 +40,25 @@
             android:name="com.jimla.inventorymanager.item.ItemsActivity">
         </activity>
         <activity
-            android:name="com.jimla.inventorymanager.project.ProjectDetails">
+            android:name="com.jimla.inventorymanager.item.ImageDetails">
         </activity>
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.jimla.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
 
 </manifest>

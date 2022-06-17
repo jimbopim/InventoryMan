@@ -1,11 +1,16 @@
 package com.jimla.inventorymanager.item;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,10 +20,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,12 +32,16 @@ import com.jimla.inventorymanager.AppDatabase;
 import com.jimla.inventorymanager.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnItemClickListener  {
+public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnItemClickListener {
 
     private TextView itemDetailsHeader;
     private TextView itemName;
@@ -55,7 +64,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
 
     private static final int CAMERA_REQUEST = 1888;
     //private ImageView imageView;
-    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+    private static final int REQUEST_IMAGE_CAPTURE = 100;
 
     private int itemId = 0;
     private int projectId = 0;
@@ -215,7 +224,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
                 Random r = new Random();
                 int dummyRfid = r.nextInt(1000) + 1;
                 StringBuilder str = new StringBuilder(dummyRfid + "");
-                while(str.length() < 16)
+                while (str.length() < 16)
                     str.insert(0, "0");
                 itemRfid.setText(str);
             }
@@ -231,23 +240,11 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                //intent.putExtra("item", items.get(position));
 
-                startActivityForResult(intent, CAMERA_REQUEST);
+                dispatchTakePictureIntent();
 
-/*                int permission = checkSelfPermission(Manifest.permission.CAMERA);
-                //test
-                permission = PackageManager.PERMISSION_GRANTED;
-                if (permission != PackageManager.PERMISSION_GRANTED)
-                {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                }
-                else
-                {
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                }*/
+/*                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, CAMERA_REQUEST);*/
             }
         });
 
@@ -305,18 +302,18 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
             public void run() {
                 ArrayList<Bitmap> images = new ArrayList<>();
 
-                if(mode == Mode.CREATE) {
-                    for(String photo : photoBase64) {
+                if (mode == Mode.CREATE) {
+                    for (String photo : photoBase64) {
                         byte[] decodedString = Base64.decode(photo, Base64.DEFAULT);
                         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
                         images.add(decodedByte);
                     }
-                }
-                else {
+                } else {
                     List<ImageEntry> imageEntries = imageDao.loadByItemId(itemId);
-
+                    int listIndex = 0;
                     for (ImageEntry e : imageEntries) {
+                        items.put(listIndex++, e.id);
                         byte[] decodedString = Base64.decode(e.photo, Base64.DEFAULT);
                         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
@@ -343,11 +340,10 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
 
     @Override
     public void onItemClick(int position) {
-/*
-        Intent intent = new Intent(ItemDetails.this, dsad.class);
-        intent.putExtra("itemId", items.get(position));
+        Intent intent = new Intent(ItemDetails.this, ImageDetails.class);
+        intent.putExtra("photoId", items.get(position));
 
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
     private void createItem() {
@@ -355,8 +351,8 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
             public void run() {
 
                 int id = writeItem();
-                if(id > 0) {
-                    for(String photo : photoBase64)
+                if (id > 0) {
+                    for (String photo : photoBase64)
                         writeImage(id, photo);
                 }
 
@@ -455,9 +451,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+/*    private void takePicture_OLD() {
         if (requestCode == MY_CAMERA_PERMISSION_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
@@ -467,23 +461,34 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
                 Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
         }
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            //imageView.setImageBitmap(photo);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            String path = "file://" + currentPhotoPath;
+            Uri imageUri = Uri.parse(path);
+            Bitmap bitmap = null;
+            ContentResolver contentResolver = getContentResolver();
+            try {
+                ImageDecoder.Source source = ImageDecoder.createSource(contentResolver, imageUri);
+                bitmap = ImageDecoder.decodeBitmap(source);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+/*            Bundle extras = data.getExtras();
+            Bitmap capturedPhotoThumbnail = (Bitmap) extras.get("data");*/
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] bytes = byteArrayOutputStream .toByteArray();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] bytes = byteArrayOutputStream.toByteArray();
 
             String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
-            if(mode == Mode.CREATE)
+            if (mode == Mode.CREATE)
                 photoBase64.add(base64);
-            else if(mode == Mode.EDIT) {
+            else if (mode == Mode.EDIT) {
                 Thread thread = new Thread(new Runnable() {
                     public void run() {
                         writeImage(itemId, base64);
@@ -498,5 +503,46 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
             }
             setAdapter();
         }
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.e("error", "Error creating file");
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.jimla.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    String currentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 }
