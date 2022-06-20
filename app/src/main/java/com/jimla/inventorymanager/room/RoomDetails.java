@@ -2,7 +2,6 @@ package com.jimla.inventorymanager.room;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -12,32 +11,23 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.jimla.inventorymanager.AppDatabase;
 import com.jimla.inventorymanager.R;
-import com.jimla.inventorymanager.item.ItemsActivity;
-
-import java.util.List;
+import com.jimla.inventorymanager.item.ItemActivity;
 
 public class RoomDetails extends AppCompatActivity {
 
     private TextView roomDetailsHeader;
-    private TextView roomName;
+    private TextView tvRoomName;
     private NumberPicker floorPicker;
-    private TextView description;
+    private TextView tvDescription;
     private Button openRoomsButton;
     private Button createButton;
     private Button deleteButton;
     private Button editButton;
 
-    private RoomDao roomDao;
-    private RoomEntry item;
+    private Room room;
 
-    private int roomId = 0;
-    private int projectId = 0;
     private Mode mode;
-
-    boolean set = false;
-
     enum Mode {
         CREATE, EDIT, VIEW
     }
@@ -47,14 +37,13 @@ public class RoomDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_details);
 
-        initDB();
-
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                roomId = extras.getInt("roomId");
-                projectId = extras.getInt("projectId");
-                loadItem();
+                room = new Room(
+                        extras.getInt("roomId"),
+                        extras.getString("roomName"),
+                        extras.getString("roomDescription"));
             }
         } else {
             //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
@@ -62,33 +51,11 @@ public class RoomDetails extends AppCompatActivity {
 
         setupUI();
 
-        if (roomId == 0) {
+        if (room == null) {
             setMode(Mode.CREATE);
         } else {
             setMode(Mode.VIEW);
             updateFieldsFromItem();
-        }
-    }
-
-    private void initDB() {
-        AppDatabase db = AppDatabase.getDatabaseInstance(getApplicationContext(), getString(R.string.db_name));
-
-        roomDao = db.roomDao();
-    }
-
-    private void loadItem() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                item = roomDao.loadById(roomId);
-            }
-        });
-        thread.start();
-
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -97,10 +64,10 @@ public class RoomDetails extends AppCompatActivity {
 
         switch (mode) {
             case CREATE:
-                roomName.setFocusable(true);
-                roomName.setFocusableInTouchMode(true);
-                description.setFocusable(true);
-                description.setFocusableInTouchMode(true);
+                tvRoomName.setFocusable(true);
+                tvRoomName.setFocusableInTouchMode(true);
+                tvDescription.setFocusable(true);
+                tvDescription.setFocusableInTouchMode(true);
                 deleteButton.setVisibility(View.INVISIBLE);
                 editButton.setVisibility(View.INVISIBLE);
                 createButton.setVisibility(View.VISIBLE);
@@ -111,10 +78,10 @@ public class RoomDetails extends AppCompatActivity {
                 roomDetailsHeader.setText(getString(R.string.room_create));
                 break;
             case EDIT:
-                roomName.setFocusable(true);
-                roomName.setFocusableInTouchMode(true);
-                description.setFocusable(true);
-                description.setFocusableInTouchMode(true);
+                tvRoomName.setFocusable(true);
+                tvRoomName.setFocusableInTouchMode(true);
+                tvDescription.setFocusable(true);
+                tvDescription.setFocusableInTouchMode(true);
                 createButton.setVisibility(View.INVISIBLE);
                 openRoomsButton.setVisibility(View.INVISIBLE);
                 deleteButton.setVisibility(View.VISIBLE);
@@ -125,10 +92,10 @@ public class RoomDetails extends AppCompatActivity {
                 editButton.setText(getString(R.string.save_button));
                 break;
             case VIEW:
-                roomName.setFocusable(false);
-                roomName.setFocusableInTouchMode(false);
-                description.setFocusable(false);
-                description.setFocusableInTouchMode(false);
+                tvRoomName.setFocusable(false);
+                tvRoomName.setFocusableInTouchMode(false);
+                tvDescription.setFocusable(false);
+                tvDescription.setFocusableInTouchMode(false);
                 createButton.setVisibility(View.INVISIBLE);
                 openRoomsButton.setVisibility(View.VISIBLE);
                 deleteButton.setVisibility(View.INVISIBLE);
@@ -143,19 +110,19 @@ public class RoomDetails extends AppCompatActivity {
 
     private void setupUI() {
         roomDetailsHeader = findViewById(R.id.tvRoomDetailsHeader);
-        roomName = findViewById(R.id.etRoomName);
+        tvRoomName = findViewById(R.id.etRoomName);
         floorPicker = findViewById(R.id.floorPicker);
-        description = findViewById(R.id.etDescription);
+        tvDescription = findViewById(R.id.etDescription);
         openRoomsButton = findViewById(R.id.openItemsButton);
         createButton = findViewById(R.id.createButton);
         editButton = findViewById(R.id.editButton);
         deleteButton = findViewById(R.id.deleteButton);
 
-        roomName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        tvRoomName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    roomName.clearFocus();
+                    tvRoomName.clearFocus();
                 }
                 return false;
             }
@@ -164,8 +131,8 @@ public class RoomDetails extends AppCompatActivity {
         openRoomsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RoomDetails.this, ItemsActivity.class);
-                intent.putExtra("roomId", roomId);
+                Intent intent = new Intent(RoomDetails.this, ItemActivity.class);
+                intent.putExtra("roomId", room.roomId);
 
                 startActivity(intent);
             }
@@ -190,7 +157,6 @@ public class RoomDetails extends AppCompatActivity {
                         setMode(Mode.EDIT);
                         break;
                 }
-                //moveText();
             }
         });
 
@@ -199,7 +165,7 @@ public class RoomDetails extends AppCompatActivity {
             public void onClick(View view) {
                 new Thread(new Runnable() {
                     public void run() {
-                        roomDao.delete(roomId);
+
                         finish();
                     }
                 }).start();
@@ -210,12 +176,12 @@ public class RoomDetails extends AppCompatActivity {
         String[] choices = new String[max];
         choices[10] = "Not selected";
 
-        for(int i = -10; i < max - 10; i++) {
-            if(i < 0)
+        for (int i = -10; i < max - 10; i++) {
+            if (i < 0)
                 choices[i + 10] = "Basement floor " + Math.abs(i);
-            else if(i == 0)
+            else if (i == 0)
                 choices[i + 10] = "Not selected";
-            else if(i == 1)
+            else if (i == 1)
                 choices[i + 10] = "Ground floor";
             else
                 choices[i + 10] = "Floor " + (i - 1);
@@ -231,22 +197,6 @@ public class RoomDetails extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             public void run() {
 
-                List<RoomEntry> users = roomDao.getAll();
-
-                int highestId = 0;
-                for (RoomEntry c : users) {
-                    if (c.id > highestId)
-                        highestId = c.id;
-                }
-                highestId = highestId + 1;
-
-                RoomEntry roomEntry = new RoomEntry(highestId, projectId, roomName.getText().toString(), description.getText().toString(), floorPicker.getValue(), System.currentTimeMillis());
-                try {
-                    roomDao.insert(roomEntry);
-                } catch (Exception e) {
-                    Log.e("error", "Duplicate key");
-                }
-
                 finish();
             }
         });
@@ -261,13 +211,6 @@ public class RoomDetails extends AppCompatActivity {
     private void updateItem() {
         Thread thread = new Thread(new Runnable() {
             public void run() {
-                RoomEntry itemEntry = roomDao.loadById(roomId);
-                itemEntry.name = roomName.getText().toString();
-                itemEntry.description = description.getText().toString();
-                itemEntry.floor = floorPicker.getValue();
-
-                item = itemEntry;
-                roomDao.update(itemEntry);
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -286,10 +229,10 @@ public class RoomDetails extends AppCompatActivity {
     }
 
     private void updateFieldsFromItem() {
-        if (item != null) {
-            roomName.setText(item.name);
-            description.setText(item.description);
-            floorPicker.setValue(item.floor);
+        if (room != null) {
+            tvRoomName.setText(room.roomName);
+            tvDescription.setText(room.roomDescription);
+            //floorPicker.setValue(item.floor);
         }
     }
 }

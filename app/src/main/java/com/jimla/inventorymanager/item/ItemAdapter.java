@@ -1,4 +1,4 @@
-package com.jimla.inventorymanager.project;
+package com.jimla.inventorymanager.item;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +11,14 @@ import com.jimla.inventorymanager.R;
 
 import java.util.ArrayList;
 
-public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
+public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
-    private final ArrayList<Site> sites;
+    private final ArrayList<Item> items;
     private final OnItemClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
         private final TextView description;
-        private final TextView startDate;
 
         public ViewHolder(View view, OnItemClickListener listener) {
             super(view);
@@ -31,17 +30,8 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
                 }
             });
 
-            view.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    listener.onItemLongClick(getAdapterPosition());
-                    return true;
-                }
-            });
-
             name = view.findViewById(R.id.name);
             description = view.findViewById(R.id.description);
-            startDate = view.findViewById(R.id.startDate);
         }
 
         private TextView getName() {
@@ -51,19 +41,17 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
         private TextView getDescription() {
             return description;
         }
-
-        private TextView getStartDate() {
-            return startDate;
-        }
     }
 
-    public ProjectAdapter(ArrayList<Site> sites, OnItemClickListener listener) {
-        this.sites = sites;
+    public ItemAdapter(ArrayList<Item> items, OnItemClickListener listener) {
+        this.items = items;
         this.listener = listener;
     }
 
+    // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.main_row_item, viewGroup, false);
 
@@ -73,23 +61,21 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
-        Site site = sites.get(position);
-        viewHolder.getName().setText(site.siteName);
-        viewHolder.getDescription().setText(site.description);
-        viewHolder.getStartDate().setText(String.valueOf(site.startDate));
+        Item item = items.get(position);
+        viewHolder.getName().setText(item.itemName);
+        viewHolder.getDescription().setText(item.itemDescription);
     }
 
     @Override
     public int getItemCount() {
-        return sites.size();
+        return items.size();
     }
 
-    public Site getSite(int position) {
-        return sites.get(position);
+    public Item getItem(int position) {
+        return items.get(position);
     }
 
     interface OnItemClickListener {
         void onItemClick(int position);
-        void onItemLongClick(int position);
     }
 }

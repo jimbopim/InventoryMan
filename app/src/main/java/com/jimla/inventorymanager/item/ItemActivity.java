@@ -1,4 +1,4 @@
-package com.jimla.inventorymanager.room;
+package com.jimla.inventorymanager.item;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jimla.inventorymanager.R;
-import com.jimla.inventorymanager.item.ItemActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,28 +27,26 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnItemClickListener {
+public class ItemActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
-    private RoomAdapter roomAdapter;
+    private ItemAdapter itemAdapter;
 
-    private final ArrayList<Room> rooms = new ArrayList<>();
+    private final ArrayList<Item> items = new ArrayList<>();
 
-    private int siteId = 0;
+    private int roomId = 0;
 
     private ProgressDialog dialog;
-
-    private int tries = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room);
+        setContentView(R.layout.activity_items);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                siteId = extras.getInt("siteId");
+                roomId = extras.getInt("roomId");
             }
         } else {
             //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
@@ -66,52 +63,42 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
         dialog.setMessage("Loading....");
         dialog.show();
 
-        StringRequest request = new StringRequest(getResources().getString(R.string.api_rooms) + siteId, new Response.Listener<String>() {
+        StringRequest request = new StringRequest(getResources().getString(R.string.api_items) + roomId, new Response.Listener<String>() {
             @Override
             public void onResponse(String string) {
                 string = new String(string.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-                rooms.clear();
-                rooms.addAll(parseJsonData(string));
+                items.clear();
+                items.addAll(parseJsonData(string));
                 setAdapter();
-                if(tries > 1)
-                    Toast.makeText(getApplicationContext(), "Fetched data, " + tries + " tries", Toast.LENGTH_SHORT).show();
-                tries = 0;
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                if(tries > 5) {
-                    Toast.makeText(getApplicationContext(), "Data could not be fetched", Toast.LENGTH_SHORT).show();
-                    Log.e("debug", volleyError.toString());
-                    dialog.dismiss();
-                    tries = 0;
-                }
-                else {
-                    tries++;
-                    fetchData();
-                }
+                Toast.makeText(getApplicationContext(), "Some error occurred!!", Toast.LENGTH_SHORT).show();
+                Log.e("debug", volleyError.toString());
+                dialog.dismiss();
             }
         });
 
-        RequestQueue rQueue = Volley.newRequestQueue(RoomActivity.this);
+        RequestQueue rQueue = Volley.newRequestQueue(ItemActivity.this);
         rQueue.add(request);
     }
 
-    private ArrayList<Room> parseJsonData(String jsonString) {
-        ArrayList<Room> tempSitesArray = new ArrayList<>();
+    private ArrayList<Item> parseJsonData(String jsonString) {
+        ArrayList<Item> tempSitesArray = new ArrayList<>();
         try {
             JSONArray sitesJson = new JSONArray(jsonString);
 
             for (int i = 0; i < sitesJson.length(); ++i) {
                 JSONObject jsonObject = sitesJson.getJSONObject(i);
-                int roomId = jsonObject.getInt("roomId");
-                String roomName = jsonObject.getString("name");
-                String roomDescription = jsonObject.getString("description");
+                int itemId = jsonObject.getInt("itemId");
+                String itemName = jsonObject.getString("itemName");
+                String itemDescription = jsonObject.getString("itemDescription");
 
-                Room site = new Room(roomId, roomName, roomDescription);
+                Item site = new Item(itemId, itemName, itemDescription);
                 tempSitesArray.add(site);
             }
-            for (Room s : tempSitesArray)
+            for (Item s : tempSitesArray)
                 Log.i("debug", s.toString());
 
         } catch (JSONException e) {
@@ -124,19 +111,19 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
     }
 
     private void initRecyclerView() {
-        recyclerView = findViewById(R.id.recyclerView3);
+        recyclerView = findViewById(R.id.recyclerView2);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(),
                 DividerItemDecoration.VERTICAL));
     }
 
     private void initUI() {
-        Button buttonAdd = findViewById(R.id.button_add_new3);
+        Button buttonAdd = findViewById(R.id.button_add_new2);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RoomActivity.this, RoomDetails.class);
-                intent.putExtra("projectId", siteId);
+                Intent intent = new Intent(ItemActivity.this, ItemDetails.class);
+                intent.putExtra("roomId", roomId);
 
                 startActivity(intent);
             }
@@ -145,20 +132,13 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(RoomActivity.this, ItemActivity.class);
-        Room room = roomAdapter.getRoom(position);
-        intent.putExtra("roomId", room.roomId);
 
-        startActivity(intent);
-    }
-
-    @Override
-    public void onItemLongClick(int position) {
-        Intent intent = new Intent(RoomActivity.this, RoomDetails.class);
-        Room room = roomAdapter.getRoom(position);
-        intent.putExtra("roomId", room.roomId);
-        intent.putExtra("roomName", room.roomName);
-        intent.putExtra("roomDescription", room.roomDescription);
+        Intent intent = new Intent(ItemActivity.this, ItemDetails.class);
+        Item item = itemAdapter.getItem(position);
+        intent.putExtra("roomId", roomId);
+        intent.putExtra("itemId", item.itemId);
+        intent.putExtra("itemName", item.itemName);
+        intent.putExtra("itemDescription", item.itemDescription);
 
         startActivity(intent);
     }
@@ -166,20 +146,21 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("debug", "onResume/RoomActivity");
+        Log.e("debug", "onResume/ItemsActivity");
+        //setAdapter();
     }
 
     private void setAdapter() {
-        RoomAdapter.OnItemClickListener listener = this;
+        ItemAdapter.OnItemClickListener listener = this;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                roomAdapter = new RoomAdapter(rooms, listener);
+                itemAdapter = new ItemAdapter(items, listener);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        recyclerView.setAdapter(roomAdapter);
+                        recyclerView.setAdapter(itemAdapter);
                     }
                 });
             }

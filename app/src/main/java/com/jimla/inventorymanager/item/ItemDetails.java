@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,27 +18,22 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jimla.inventorymanager.AppDatabase;
 import com.jimla.inventorymanager.R;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
-public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnItemClickListener {
+public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnItemClickListener {
 
     private TextView itemDetailsHeader;
     private TextView itemName;
@@ -55,28 +47,16 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
     private Button editButton;
 
     private RecyclerView recyclerViewImages;
-    private final HashMap<Integer, Integer> items = new HashMap<>();
 
-    private ItemDao itemDao;
-    private ItemEntry item;
+    private Item item;
 
-    private ImageDao imageDao;
+    private ArrayList<Image> images;
 
-    private static final int CAMERA_REQUEST = 1888;
-    //private ImageView imageView;
     private static final int REQUEST_IMAGE_CAPTURE = 100;
 
-    private int itemId = 0;
-    private int projectId = 0;
-    private int roomId = 0;
-
-    //ArrayList<String> photoBase64 = new ArrayList<>();
-    ArrayList<String> photoUris = new ArrayList<>();
+    private final ArrayList<String> photoUris = new ArrayList<>();
 
     private Mode mode;
-
-    boolean set = false;
-
     enum Mode {
         CREATE, EDIT, VIEW
     }
@@ -86,14 +66,15 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
 
-        initDB();
+        //initDB();
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                itemId = extras.getInt("itemId");
-                roomId = extras.getInt("roomId");
-                loadItem();
+                item = new Item(
+                        extras.getInt("itemId"),
+                        extras.getString("itemName"),
+                        extras.getString("itemDescription"));
             }
         } else {
             //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
@@ -102,7 +83,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         initRecyclerView();
         setupUI();
 
-        if (itemId == 0) {
+        if (item == null) {
             setMode(Mode.CREATE);
         } else {
             setMode(Mode.VIEW);
@@ -110,14 +91,14 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         }
     }
 
-    private void initDB() {
+/*    private void initDB() {
         AppDatabase db = AppDatabase.getDatabaseInstance(getApplicationContext(), getString(R.string.db_name));
 
         itemDao = db.itemDao();
         imageDao = db.imageDao();
-    }
+    }*/
 
-    private void loadItem() {
+/*    private void loadItem() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -131,7 +112,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private void setMode(Mode mode) {
         this.mode = mode;
@@ -190,7 +171,6 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         conditionSpinner = findViewById(R.id.spCondition);
         photoButton = findViewById(R.id.photoButton);
         scanButton = findViewById(R.id.scanButton);
-        //imageView = findViewById(R.id.imageView);
         createButton = findViewById(R.id.createButton2);
         editButton = findViewById(R.id.editButton2);
         deleteButton = findViewById(R.id.deleteButton2);
@@ -261,7 +241,6 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
                         setMode(Mode.EDIT);
                         break;
                 }
-                //moveText();
             }
         });
 
@@ -270,7 +249,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
             public void onClick(View view) {
                 new Thread(new Runnable() {
                     public void run() {
-                        itemDao.delete(itemId);
+
                         finish();
                     }
                 }).start();
@@ -288,38 +267,38 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         recyclerViewImages.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewImages.addItemDecoration(new DividerItemDecoration(getApplicationContext(),
                 DividerItemDecoration.VERTICAL));
-        ImagesAdapter.ViewHolder.setOnItemClickListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setAdapter();
+        //setAdapter();
     }
 
     private void setAdapter() {
+        ImageAdapter.OnItemClickListener listener = this;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                ArrayList<Bitmap> images = new ArrayList<>();
+                //ArrayList<Bitmap> images = new ArrayList<>();
 
                 if (mode == Mode.CREATE) {
                     for (String photo : photoUris) {
-                        images.add(getImageFromStorage(photo));
+                        //images.add(getImageFromStorage(photo));
                     }
                 } else {
-                    List<ImageEntry> imageEntries = imageDao.loadByItemId(itemId);
+/*                    List<ImageEntry> imageEntries = imageDao.loadByItemId(itemId);
                     int listIndex = 0;
                     for (ImageEntry e : imageEntries) {
                         items.put(listIndex++, e.id);
                         images.add(getImageFromStorage(e.photo));
-                    }
+                    }*/
                 }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        recyclerViewImages.setAdapter(new ImagesAdapter(images));
+                        recyclerViewImages.setAdapter(new ImageAdapter(images, listener));
                     }
                 });
             }
@@ -336,7 +315,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent(ItemDetails.this, ImageDetails.class);
-        intent.putExtra("photoId", items.get(position));
+        //intent.putExtra("photoId", items.get(position));
 
         startActivity(intent);
     }
@@ -345,11 +324,11 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         Thread thread = new Thread(new Runnable() {
             public void run() {
 
-                int id = writeItem();
+/*                int id = writeItem();
                 if (id > 0) {
                     for (String photo : photoUris)
                         writeImage(id, photo);
-                }
+                }*/
 
                 finish();
             }
@@ -362,7 +341,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
         }
     }
 
-    private int writeItem() {
+/*    private int writeItem() {
         List<ItemEntry> users = itemDao.getAll();
 
         int highestId = 0;
@@ -381,9 +360,9 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
             Log.e("error", "Duplicate key");
         }
         return -1;
-    }
+    }*/
 
-    private void writeImage(int id, String photo) {
+/*    private void writeImage(int id, String photo) {
         List<ImageEntry> images = imageDao.getAll();
 
         int highestId = 0;
@@ -401,20 +380,11 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
             Log.e("error", "Duplicate key");
         }
 
-    }
+    }*/
 
     private void updateItem() {
         Thread thread = new Thread(new Runnable() {
             public void run() {
-                ItemEntry itemEntry = itemDao.loadById(itemId);
-                itemEntry.name = itemName.getText().toString();
-                itemEntry.rfid = itemRfid.getText().toString();
-                itemEntry.description = itemDescription.getText().toString();
-/*                if(photoBase64 != null)
-                    itemEntry.photo = photoBase64;*/
-
-                item = itemEntry;
-                itemDao.update(itemEntry);
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -434,15 +404,9 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
 
     private void updateFieldsFromItem() {
         if (item != null) {
-            itemName.setText(item.name);
-            itemRfid.setText(item.rfid);
-            itemDescription.setText(item.description);
-
-/*            if(item.photo != null) {
-                byte[] decodedString = Base64.decode(item.photo, Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                //imageView.setImageBitmap(decodedByte);
-            }*/
+            itemName.setText(item.itemName);
+            itemRfid.setText(item.itemEpc);
+            itemDescription.setText(item.itemDescription);
         }
     }
 
@@ -469,7 +433,7 @@ public class ItemDetails extends AppCompatActivity implements ImagesAdapter.OnIt
             else if (mode == Mode.EDIT) {
                 Thread thread = new Thread(new Runnable() {
                     public void run() {
-                        writeImage(itemId, currentPhotoPath);
+                        //writeImage(itemId, currentPhotoPath);
                     }
                 });
                 thread.start();

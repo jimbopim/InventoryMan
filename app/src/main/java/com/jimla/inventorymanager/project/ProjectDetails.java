@@ -2,7 +2,6 @@ package com.jimla.inventorymanager.project;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -11,11 +10,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.jimla.inventorymanager.AppDatabase;
 import com.jimla.inventorymanager.R;
 import com.jimla.inventorymanager.room.RoomActivity;
-
-import java.util.List;
 
 public class ProjectDetails extends AppCompatActivity {
 
@@ -27,14 +23,9 @@ public class ProjectDetails extends AppCompatActivity {
     private Button deleteButton;
     private Button editButton;
 
-    private ProjectDao projectDao;
-    private ProjectEntry item;
+    private Site site;
 
-    private int projectId = 0;
     private Mode mode;
-
-    boolean set = false;
-
     enum Mode {
         CREATE, EDIT, VIEW
     }
@@ -44,13 +35,15 @@ public class ProjectDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_details);
 
-        initDB();
-
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                projectId = extras.getInt("projectId");
-                loadItem();
+                site = new Site(
+                        extras.getInt("siteId"),
+                        extras.getInt("siteType"),
+                        extras.getString("siteName"),
+                        extras.getString("siteDescription"),
+                        extras.getInt("siteStartDate"));
             }
         } else {
             //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
@@ -58,33 +51,11 @@ public class ProjectDetails extends AppCompatActivity {
 
         setupUI();
 
-        if (projectId == 0) {
+        if (site == null) {
             setMode(Mode.CREATE);
         } else {
             setMode(Mode.VIEW);
             updateFieldsFromItem();
-        }
-    }
-
-    private void initDB() {
-        AppDatabase db = AppDatabase.getDatabaseInstance(getApplicationContext(), getString(R.string.db_name));
-
-        projectDao = db.projectDao();
-    }
-
-    private void loadItem() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                item = projectDao.loadById(projectId);
-            }
-        });
-        thread.start();
-
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -151,7 +122,7 @@ public class ProjectDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProjectDetails.this, RoomActivity.class);
-                intent.putExtra("projectId", projectId);
+                intent.putExtra("siteId", site.siteId);
 
                 startActivity(intent);
             }
@@ -176,7 +147,6 @@ public class ProjectDetails extends AppCompatActivity {
                         setMode(Mode.EDIT);
                         break;
                 }
-                //moveText();
             }
         });
 
@@ -185,7 +155,7 @@ public class ProjectDetails extends AppCompatActivity {
             public void onClick(View view) {
                 new Thread(new Runnable() {
                     public void run() {
-                        projectDao.delete(projectId);
+
                         finish();
                     }
                 }).start();
@@ -196,22 +166,6 @@ public class ProjectDetails extends AppCompatActivity {
     private void createItem() {
         Thread thread = new Thread(new Runnable() {
             public void run() {
-
-                List<ProjectEntry> users = projectDao.getAll();
-
-                int highestId = 0;
-                for (ProjectEntry c : users) {
-                    if (c.id > highestId)
-                        highestId = c.id;
-                }
-                highestId = highestId + 1;
-
-                ProjectEntry projectEntry = new ProjectEntry(highestId, projectName.getText().toString(), description.getText().toString(), System.currentTimeMillis());
-                try {
-                    projectDao.insert(projectEntry);
-                } catch (Exception e) {
-                    Log.e("error", "Duplicate key");
-                }
 
                 finish();
             }
@@ -227,11 +181,6 @@ public class ProjectDetails extends AppCompatActivity {
     private void updateItem() {
         Thread thread = new Thread(new Runnable() {
             public void run() {
-                ProjectEntry itemEntry = projectDao.loadById(projectId);
-                itemEntry.name = projectName.getText().toString();
-                itemEntry.description = description.getText().toString();
-                item = itemEntry;
-                projectDao.update(itemEntry);
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -250,9 +199,9 @@ public class ProjectDetails extends AppCompatActivity {
     }
 
     private void updateFieldsFromItem() {
-        if (item != null) {
-            projectName.setText(item.name);
-            description.setText(item.description);
+        if (site != null) {
+            projectName.setText(site.siteName);
+            description.setText(site.description);
         }
     }
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api_sites">https://sekinsvinteg2t.kinnarps.com:8122/api/inventory/site</string>
+    <string name="api_rooms">https://sekinsvinteg2t.kinnarps.com:8122/api/inventory/room?siteId=</string>
+    <string name="api_items"><![CDATA[https://sekinsvinteg2t.kinnarps.com:8122/api/inventory/item?siteId=1&roomId=]]></string>
+</resources>

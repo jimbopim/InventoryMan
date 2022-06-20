@@ -5,7 +5,7 @@
     android:layout_height="180dp"
     android:gravity="center_vertical"
     android:theme="@style/Theme.InventoryManager"
-    android:background="?android:attr/selectableItemBackground" >
+    android:background="?android:attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/imageViewRec"

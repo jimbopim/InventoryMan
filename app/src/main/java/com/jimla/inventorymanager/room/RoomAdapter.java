@@ -13,24 +13,14 @@ import java.util.ArrayList;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
-    interface OnItemClickListener {
-        void onItemClick(int position);
-    }
+    private final ArrayList<Room> rooms;
+    private final OnItemClickListener listener;
 
-    private final ArrayList<String> localDataSetNames;
-    private final ArrayList<String> localDataSetRfid;
-
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
-        private final TextView birthdate;
+        private final TextView description;
 
-        private static OnItemClickListener listener;
-
-        public ViewHolder(View view) {
+        public ViewHolder(View view, OnItemClickListener listener) {
             super(view);
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -40,58 +30,59 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                 }
             });
 
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    listener.onItemLongClick(getAdapterPosition());
+                    return true;
+                }
+            });
+
             name = view.findViewById(R.id.name);
-            birthdate = view.findViewById(R.id.birthdate);
+            description = view.findViewById(R.id.description);
         }
 
         private TextView getName() {
             return name;
         }
 
-        private TextView getBirthDate() {
-            return birthdate;
-        }
-
-        public static void setOnItemClickListener(OnItemClickListener listener) {
-            ViewHolder.listener = listener;
+        private TextView getDescription() {
+            return description;
         }
     }
 
-    /**
-     * Initialize the dataset of the Adapter.
-     *
-     * @param dataSetNames String[] containing the data to populate views to be used
-     * by RecyclerView.
-     * @param dataSetRfid
-     */
-    public RoomAdapter(ArrayList<String> dataSetNames, ArrayList<String> dataSetRfid) {
-        localDataSetNames = dataSetNames;
-        localDataSetRfid = dataSetRfid;
+    public RoomAdapter(ArrayList<Room> rooms, OnItemClickListener listener) {
+        this.rooms = rooms;
+        this.listener = listener;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.main_row_item, viewGroup, false);
 
-        return new ViewHolder(view);
+        return new ViewHolder(view, listener);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
-        viewHolder.getName().setText(localDataSetNames.get(position));
-        viewHolder.getBirthDate().setText(localDataSetRfid.get(position));
+        Room room = rooms.get(position);
+        viewHolder.getName().setText(room.roomName);
+        viewHolder.getDescription().setText(room.roomDescription);
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return localDataSetNames.size();
+        return rooms.size();
+    }
+
+    public Room getRoom(int position) {
+        return rooms.get(position);
+    }
+
+    interface OnItemClickListener {
+        void onItemClick(int position);
+        void onItemLongClick(int position);
     }
 }
