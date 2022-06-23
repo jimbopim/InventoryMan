@@ -19,6 +19,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView name;
         private final TextView description;
+        private final TextView roomId;
 
         public ViewHolder(View view, OnItemClickListener listener) {
             super(view);
@@ -40,6 +41,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
             name = view.findViewById(R.id.name);
             description = view.findViewById(R.id.description);
+            roomId = view.findViewById(R.id.startDate);
         }
 
         private TextView getName() {
@@ -48,6 +50,10 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
         private TextView getDescription() {
             return description;
+        }
+
+        private TextView getRoomId() {
+            return roomId;
         }
     }
 
@@ -70,6 +76,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
         Room room = rooms.get(position);
         viewHolder.getName().setText(room.roomName);
         viewHolder.getDescription().setText(room.roomDescription);
+        viewHolder.getRoomId().setText(String.valueOf(room.roomId));
     }
 
     @Override

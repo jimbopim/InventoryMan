@@ -47,6 +47,9 @@
     <orderEntry type="library" name="Gradle: androidx.collection:collection:1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: androidx.constraintlayout:constraintlayout-solver:2.0.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:listenablefuture:1.0" level="project" />
+    <orderEntry type="library" name="Gradle: C" level="project" />
+    <orderEntry type="library" name="Gradle: C (1)" level="project" />
+    <orderEntry type="library" name="Gradle: C (2)" level="project" />
     <orderEntry type="library" name="Gradle: androidx.appcompat:appcompat:1.4.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.core:core:1.7.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.annotation:annotation-experimental:1.1.0@aar" level="project" />
@@ -90,5 +93,9 @@
     <orderEntry type="library" name="Gradle: androidx.work:work-runtime:2.7.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.startup:startup-runtime:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.volley:volley:1.2.1@aar" level="project" />
+    <orderEntry type="library" name="Gradle: __wrapped_aars__::NurApiAndroid:unspecified@aar" level="project" />
+    <orderEntry type="library" name="Gradle: __wrapped_aars__::NurDeviceUpdate:unspecified@aar" level="project" />
+    <orderEntry type="library" name="Gradle: __wrapped_aars__::NurSmartPair:unspecified@aar" level="project" />
+    <orderEntry type="library" name="Gradle: no.nordicsemi.android.support.v18:scanner:1.4.0@aar" level="project" />
   </component>
 </module>

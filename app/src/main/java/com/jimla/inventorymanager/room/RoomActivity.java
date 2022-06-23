@@ -20,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jimla.inventorymanager.R;
 import com.jimla.inventorymanager.item.ItemActivity;
+import com.jimla.inventorymanager.search.SearchActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -132,10 +133,21 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
 
     private void initUI() {
         Button buttonAdd = findViewById(R.id.button_add_new3);
+        Button btnSearch = findViewById(R.id.btnSearch);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RoomActivity.this, RoomDetails.class);
+                intent.putExtra("projectId", siteId);
+
+                startActivity(intent);
+            }
+        });
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RoomActivity.this, SearchActivity.class);
                 intent.putExtra("projectId", siteId);
 
                 startActivity(intent);

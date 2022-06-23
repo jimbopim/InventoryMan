@@ -2,28 +2,28 @@ package com.jimla.inventorymanager.item;
 
 public class Item {
 
-    int siteId;
-    int roomId;
-    int itemId;
-    int itemType;
-    String itemName;
-    String itemDescription;
-    String itemEpc;
-    String manufacturer;
-    int manufacturingYear;
-    int salesPrice;
-    int width;
-    int height;
-    int length;
-    int status;
-    int makeBuyCode;
-    int orderNumber;
-    int lineNumber;
-    int lineSuffix;
-    int quantity;
-    String itemNumber;
-    String configurationText;
-    String note;
+    public int siteId;
+    public int roomId;
+    public int itemId;
+    public int itemType;
+    public String itemName;
+    public String itemDescription;
+    public String itemEpc;
+    public String manufacturer;
+    public int manufacturingYear;
+    public int salesPrice;
+    public int width;
+    public int height;
+    public int length;
+    public int status;
+    public int makeBuyCode;
+    public int orderNumber;
+    public int lineNumber;
+    public int lineSuffix;
+    public int quantity;
+    public String itemNumber;
+    public String configurationText;
+    public String note;
 
     public Item(int itemId, String itemName, String itemDescription) {
         this.itemId = itemId;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/details_constraint"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,62 +17,161 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/etItemName"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:focusable="false"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:minHeight="48dp"
-        android:textSize="20sp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvItemDetailsHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/tvItemDetailsHeader">
 
-    <EditText
-        android:id="@+id/etDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:focusable="false"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        android:minHeight="48dp"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/etItemName"
-        app:layout_constraintStart_toStartOf="@+id/etItemName"
-        app:layout_constraintTop_toBottomOf="@+id/etRfid" />
 
-    <EditText
-        android:id="@+id/etRfid"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:focusable="false"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:minHeight="48dp"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/scanButton"
-        app:layout_constraintStart_toStartOf="@+id/etItemName"
-        app:layout_constraintTop_toBottomOf="@+id/etItemName" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/details_constraint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Spinner
-        android:id="@+id/spCondition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Spinner"
-        android:minHeight="48dp"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/etDescription"
-        app:layout_constraintTop_toBottomOf="@+id/etDescription" />
+            <EditText
+                android:id="@+id/etItemName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Name"
+                android:backgroundTint="@drawable/edit_text_line"
+                android:textColor="@drawable/edit_text_selector" />
+
+            <EditText
+                android:id="@+id/etDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:minHeight="48dp"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="@+id/etItemName"
+                app:layout_constraintStart_toStartOf="@+id/etItemName"
+                app:layout_constraintTop_toBottomOf="@+id/etRfid"
+                tools:text="Description"
+                android:backgroundTint="@drawable/edit_text_line"
+                android:textColor="@drawable/edit_text_selector" />
+
+            <EditText
+                android:id="@+id/etRfid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:textSize="20sp"
+                android:enabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/etItemName"
+                app:layout_constraintTop_toBottomOf="@+id/etItemName"
+                tools:text="RFID"
+                android:backgroundTint="@drawable/edit_text_line"
+                android:textColor="@drawable/edit_text_selector" />
+
+            <Spinner
+                android:id="@+id/spItemType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:minHeight="48dp"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/etDescription"
+                app:layout_constraintTop_toBottomOf="@+id/etDescription"/>
+
+            <Spinner
+                android:id="@+id/spCondition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:minHeight="48dp"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/etDescription"
+                app:layout_constraintTop_toBottomOf="@+id/spItemType" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewImages"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/etDescription"
+                app:layout_constraintStart_toStartOf="@+id/etDescription"
+                app:layout_constraintTop_toBottomOf="@+id/spCondition" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Name"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/etItemName"
+                app:layout_constraintStart_toStartOf="@+id/etItemName"
+                app:layout_constraintTop_toTopOf="@+id/etItemName" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="RFID"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/etRfid"
+                app:layout_constraintStart_toStartOf="@+id/etRfid"
+                app:layout_constraintTop_toTopOf="@+id/etRfid" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Description"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/etDescription"
+                app:layout_constraintStart_toStartOf="@+id/etDescription"
+                app:layout_constraintTop_toTopOf="@+id/etDescription" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Condition"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/spCondition"
+                app:layout_constraintStart_toStartOf="@+id/spCondition"
+                app:layout_constraintTop_toTopOf="@+id/spCondition" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/spItemType"
+                app:layout_constraintStart_toStartOf="@+id/spItemType"
+                app:layout_constraintTop_toTopOf="@+id/spItemType" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/createButton2"
@@ -110,79 +209,26 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/scanButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:text="Scan"
-        app:backgroundTint="@color/light_blue"
-        app:layout_constraintBottom_toBottomOf="@+id/etRfid"
-        app:layout_constraintEnd_toEndOf="@+id/etItemName"
-        app:layout_constraintTop_toTopOf="@+id/etRfid" />
-
-    <Button
         android:id="@+id/photoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:text="New Photo"
         app:backgroundTint="@color/light_blue"
-        app:layout_constraintEnd_toEndOf="@+id/etDescription"
-        app:layout_constraintStart_toStartOf="@+id/etDescription"
-        app:layout_constraintTop_toBottomOf="@+id/spCondition" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewImages"
+    <Button
+        android:id="@+id/scanButton"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/deleteButton2"
-        app:layout_constraintEnd_toEndOf="@+id/etDescription"
-        app:layout_constraintStart_toStartOf="@+id/etDescription"
-        app:layout_constraintTop_toBottomOf="@+id/photoButton" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="Name"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/etItemName"
-        app:layout_constraintStart_toStartOf="@+id/etItemName"
-        app:layout_constraintTop_toTopOf="@+id/etItemName" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="RFID"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/etRfid"
-        app:layout_constraintStart_toStartOf="@+id/etRfid"
-        app:layout_constraintTop_toTopOf="@+id/etRfid" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="Description"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/etDescription"
-        app:layout_constraintStart_toStartOf="@+id/etDescription"
-        app:layout_constraintTop_toTopOf="@+id/etDescription" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Condition"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/spCondition"
-        app:layout_constraintStart_toStartOf="@+id/spCondition"
-        app:layout_constraintTop_toTopOf="@+id/spCondition" />
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Scan Tag"
+        app:backgroundTint="@color/light_blue"
+        app:layout_constraintBottom_toTopOf="@+id/createButton2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

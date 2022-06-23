@@ -23,8 +23,21 @@
     <string name="rooms_list_header">Rooms</string>
     <string name="items_list_header">Room Inventory</string>
     <string name="take_photo">Photo</string>
+    <string name="rfid_header">RFID</string>
+    <string name="search">Search</string>
+    <string name="search_item">Search Item</string>
+
+    <string-array name="pref_type">
+        <item>Not specified</item>
+        <item>Chair</item>
+        <item>Table</item>
+        <item>Cabinet</item>
+        <item>Room Divider</item>
+        <item>Other</item>
+    </string-array>
 
     <string-array name="pref_condition">
+        <item>Not specified</item>
         <item>Perfect</item>
         <item>Good</item>
         <item>Worn</item>

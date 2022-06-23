@@ -6,4 +6,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Inventory Manager"
-include ':app'
+include ':app', ':NurApiAndroid', ':NurSmartPair', ':NurDeviceUpdate', ':NiduLib'

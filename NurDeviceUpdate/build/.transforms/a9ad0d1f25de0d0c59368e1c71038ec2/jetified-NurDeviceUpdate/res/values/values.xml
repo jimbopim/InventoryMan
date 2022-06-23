@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <string name="app_name">NurUpdate</string>
+    <string name="device_up_to_date">Device UP-TO-DATE</string>
+    <string name="file_picker">Local storage</string>
+    <string name="invalid_zip">Invalid update file: </string>
+    <string name="programming_error">Programming Error</string>
+    <style name="update_theme" parent="android:Theme.Dialog">
+        <item name="android:windowBackground">@drawable/update_round_rect</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

@@ -18,6 +18,10 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -25,13 +29,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.project.NurHandler;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
 
 public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnItemClickListener {
 
@@ -40,6 +44,7 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
     private TextView itemDescription;
     private TextView itemRfid;
     private Spinner conditionSpinner;
+    private Spinner typeSpinner;
     private Button scanButton;
     private Button photoButton;
     private Button createButton;
@@ -58,8 +63,10 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
 
     private Mode mode;
     enum Mode {
-        CREATE, EDIT, VIEW
+        CREATE, EDIT, VIEW, SCAN
     }
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +96,21 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
             setMode(Mode.VIEW);
             updateFieldsFromItem();
         }
+
+        // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+        someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            // There are no request codes
+                            Intent data = result.getData();
+                            Bundle extras = data.getExtras();
+                            itemRfid.setText(extras.getString("tagEpc"));
+                        }
+                    }
+                });
     }
 
 /*    private void initDB() {
@@ -119,46 +141,72 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
 
         switch (mode) {
             case CREATE:
-                itemName.setFocusable(true);
+/*                itemName.setFocusable(true);
                 itemName.setFocusableInTouchMode(true);
                 itemDescription.setFocusable(true);
                 itemDescription.setFocusableInTouchMode(true);
                 itemRfid.setFocusable(false);
-                itemRfid.setFocusableInTouchMode(false);
+                itemRfid.setFocusableInTouchMode(false);*/
                 photoButton.setVisibility(View.VISIBLE);
                 scanButton.setVisibility(View.VISIBLE);
+                scanButton.setText("Read Tag");
                 deleteButton.setVisibility(View.INVISIBLE);
                 editButton.setVisibility(View.INVISIBLE);
                 createButton.setVisibility(View.VISIBLE);
                 itemDetailsHeader.setText(getString(R.string.item_create));
+                itemName.setEnabled(true);
+                itemDescription.setEnabled(true);
                 break;
             case EDIT:
-                itemName.setFocusable(true);
+/*                itemName.setFocusable(true);
                 itemName.setFocusableInTouchMode(true);
                 itemDescription.setFocusable(true);
                 itemDescription.setFocusableInTouchMode(true);
                 itemRfid.setFocusable(false);
-                itemRfid.setFocusableInTouchMode(false);
-                createButton.setVisibility(View.INVISIBLE);
-                deleteButton.setVisibility(View.VISIBLE);
+                itemRfid.setFocusableInTouchMode(false);*/
                 photoButton.setVisibility(View.VISIBLE);
                 scanButton.setVisibility(View.VISIBLE);
-                itemDetailsHeader.setText(getString(R.string.item_edit));
+                scanButton.setText("Start Scan Tag");
+                deleteButton.setVisibility(View.VISIBLE);
                 editButton.setText(getString(R.string.save_button));
+                createButton.setVisibility(View.INVISIBLE);
+                itemDetailsHeader.setText(getString(R.string.item_edit));
+                itemName.setEnabled(true);
+                itemDescription.setEnabled(true);
                 break;
             case VIEW:
-                itemName.setFocusable(false);
+/*                itemName.setFocusable(false);
                 itemName.setFocusableInTouchMode(false);
                 itemDescription.setFocusable(false);
                 itemDescription.setFocusableInTouchMode(false);
                 itemRfid.setFocusable(false);
-                itemRfid.setFocusableInTouchMode(false);
-                createButton.setVisibility(View.INVISIBLE);
-                deleteButton.setVisibility(View.INVISIBLE);
+                itemRfid.setFocusableInTouchMode(false);*/
                 photoButton.setVisibility(View.INVISIBLE);
                 scanButton.setVisibility(View.INVISIBLE);
-                itemDetailsHeader.setText(getString(R.string.item_view));
+                scanButton.setText("");
+                deleteButton.setVisibility(View.INVISIBLE);
                 editButton.setText(getString(R.string.edit_button));
+                createButton.setVisibility(View.INVISIBLE);
+                itemDetailsHeader.setText(getString(R.string.item_view));
+                itemName.setEnabled(false);
+                itemDescription.setEnabled(false);
+                break;
+            case SCAN:
+/*                itemName.setFocusable(false);
+                itemName.setFocusableInTouchMode(false);
+                itemDescription.setFocusable(false);
+                itemDescription.setFocusableInTouchMode(false);
+                itemRfid.setFocusable(false);
+                itemRfid.setFocusableInTouchMode(false);*/
+                photoButton.setVisibility(View.INVISIBLE);
+                scanButton.setVisibility(View.VISIBLE);
+                scanButton.setText("Scan Tag");
+                deleteButton.setVisibility(View.INVISIBLE);
+                editButton.setText("Return");
+                createButton.setVisibility(View.INVISIBLE);
+                itemDetailsHeader.setText("Scan Tag");
+                itemName.setEnabled(false);
+                itemDescription.setEnabled(false);
                 break;
         }
     }
@@ -168,6 +216,7 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
         itemName = findViewById(R.id.etItemName);
         itemDescription = findViewById(R.id.etDescription);
         itemRfid = findViewById(R.id.etRfid);
+        typeSpinner = findViewById(R.id.spItemType);
         conditionSpinner = findViewById(R.id.spCondition);
         photoButton = findViewById(R.id.photoButton);
         scanButton = findViewById(R.id.scanButton);
@@ -202,12 +251,22 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Random r = new Random();
-                int dummyRfid = r.nextInt(1000) + 1;
-                StringBuilder str = new StringBuilder(dummyRfid + "");
-                while (str.length() < 16)
-                    str.insert(0, "0");
-                itemRfid.setText(str);
+/*                Intent intent = new Intent(ItemDetails.this, Nur.class);
+
+                someActivityResultLauncher.launch(intent);*/
+
+                switch (mode) {
+                    case EDIT:
+                        setMode(Mode.SCAN);
+                        break;
+                    case CREATE:
+                        itemRfid.setText(NurHandler.getInstance().getNearestTagEpc());
+                        break;
+                    case SCAN:
+                        itemRfid.setText(NurHandler.getInstance().getNearestTagEpc());
+                        setMode(Mode.EDIT);
+                        break;
+                }
             }
         });
 
@@ -240,6 +299,9 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
                     case VIEW:
                         setMode(Mode.EDIT);
                         break;
+                    case SCAN:
+                        setMode(Mode.EDIT);
+                        break;
                 }
             }
         });
@@ -256,10 +318,15 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
             }
         });
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, getResources().getStringArray(R.array.pref_condition));
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        conditionSpinner.setAdapter(dataAdapter);
+        ArrayAdapter<String> conditionSpinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, getResources().getStringArray(R.array.pref_condition));
+        conditionSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        conditionSpinner.setAdapter(conditionSpinnerAdapter);
         conditionSpinner.setSelection(0, false);
+
+        ArrayAdapter<String> typeSpinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, getResources().getStringArray(R.array.pref_type));
+        typeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeSpinner.setAdapter(typeSpinnerAdapter);
+        typeSpinner.setSelection(0, false);
     }
 
     private void initRecyclerView() {

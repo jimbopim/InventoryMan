@@ -3,6 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Inventory_Manager.iml" filepath="$PROJECT_DIR$/.idea/modules/Inventory_Manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NiduLib/Inventory_Manager.NiduLib.iml" filepath="$PROJECT_DIR$/.idea/modules/NiduLib/Inventory_Manager.NiduLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NurApiAndroid/Inventory_Manager.NurApiAndroid.iml" filepath="$PROJECT_DIR$/.idea/modules/NurApiAndroid/Inventory_Manager.NurApiAndroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NurDeviceUpdate/Inventory_Manager.NurDeviceUpdate.iml" filepath="$PROJECT_DIR$/.idea/modules/NurDeviceUpdate/Inventory_Manager.NurDeviceUpdate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NurSmartPair/Inventory_Manager.NurSmartPair.iml" filepath="$PROJECT_DIR$/.idea/modules/NurSmartPair/Inventory_Manager.NurSmartPair.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Inventory_Manager.app.main.iml" />

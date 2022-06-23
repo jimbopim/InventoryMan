@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jimla.inventorymanager.R;
 import com.jimla.inventorymanager.room.RoomActivity;
+import com.nordicid.nurapi.NurApiAutoConnectTransport;
+import com.nordicid.nurapi.NurDeviceListActivity;
+import com.nordicid.nurapi.NurDeviceSpec;
+import com.nordicid.nurapi.NurEventIOChange;
+import com.nordicid.nurapi.NurTag;
+import com.nordicid.nurapi.NurTagStorage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,10 +44,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-public class ProjectActivity extends AppCompatActivity implements ProjectAdapter.OnItemClickListener {
+public class ProjectActivity extends AppCompatActivity implements ProjectAdapter.OnItemClickListener, NurHandler.InventoryControllerListener {
 
     private RecyclerView recyclerView;
     private ProjectAdapter projectAdapter;
+
+    TextView tvConn;
 
     private final ArrayList<Site> sites = new ArrayList<>();
 
@@ -55,6 +64,16 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
         initRecyclerView();
         initUI();
         fetchData();
+        startReader();
+    }
+
+    private void startReader() {
+        NurHandler nurHandler = NurHandler.getInstance();
+        nurHandler.setInventoryControllerListener(this);
+
+        //nurHandler.selectDeviceForConnection(this); //TODO Flytta till settings
+        showOnUI(tvConn, "Connecting reader...");
+        nurHandler.autoSelectConnection(this);
     }
 
     private void fetchData() {
@@ -74,7 +93,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Toast.makeText(getApplicationContext(), "Some error occurred!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Error reading from server", Toast.LENGTH_SHORT).show();
                 Log.e("debug", volleyError.toString());
                 dialog.dismiss();
             }
@@ -120,6 +139,8 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
     }
 
     private void initUI() {
+        tvConn = findViewById(R.id.tvConn);
+
         Button buttonAdd = findViewById(R.id.button_add_new);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,10 +176,27 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        NurHandler.getInstance().onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        NurHandler.getInstance().onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NurHandler.getInstance().onDestroy();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        Log.e("debug", "onResume/ProjectActivity");
-        //setAdapter();
+        NurHandler.getInstance().onResume();
     }
 
     private void setAdapter() {
@@ -211,5 +249,60 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
         } catch (Exception e) { // should never happen
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)  {
+        NurHandler nurHandler = NurHandler.getInstance();
+        //NurApiAutoConnectTransport mAutoTransport = nurHandler.getAutoTransport();
+        switch (requestCode)
+        {
+            case NurDeviceListActivity.REQUEST_SELECT_DEVICE: {
+                if (data == null || resultCode != NurDeviceListActivity.RESULT_OK)
+                    return;
+                nurHandler.connectionSelected(data, this);
+            }
+            break;
+        }
+        super.onActivityResult(requestCode,resultCode,data);
+    }
+
+    private void showOnUI(TextView textView, String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText(text);
+            }
+        });
+    }
+
+    @Override
+    public void tagFound(NurTag tag, boolean isNew) {
+
+    }
+
+    @Override
+    public void inventoryRoundDone(NurTagStorage storage, int newTagsOffset, int newTagsAdded) {
+
+    }
+
+    @Override
+    public void readerDisconnected() {
+        showOnUI(tvConn, "Reader disconnected");
+    }
+
+    @Override
+    public void readerConnected() {
+        showOnUI(tvConn, "Reader connected");
+    }
+
+    @Override
+    public void inventoryStateChanged() {
+
+    }
+
+    @Override
+    public void IOChangeEvent(NurEventIOChange event) {
+
     }
 }

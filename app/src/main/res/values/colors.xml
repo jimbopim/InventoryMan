@@ -12,5 +12,7 @@
     <color name="light_grey">#787878</color>
     <color name="dark_white">#D1D1D1</color>
     <color name="light_blue">#01579B</color>
+    <color name="enabled_color">#BE2F2F</color>
+    <color name="disabled_color">#C2C2C2</color>
 
 </resources>
