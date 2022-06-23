@@ -36,7 +36,7 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
 
     private final ArrayList<Room> rooms = new ArrayList<>();
 
-    private int siteId = 0;
+    private int currentSiteId;
 
     private ProgressDialog dialog;
 
@@ -50,7 +50,7 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                siteId = extras.getInt("siteId");
+                currentSiteId = extras.getInt("siteId");
             }
         } else {
             //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
@@ -67,7 +67,7 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
         dialog.setMessage("Loading....");
         dialog.show();
 
-        StringRequest request = new StringRequest(getResources().getString(R.string.api_rooms) + siteId, new Response.Listener<String>() {
+        StringRequest request = new StringRequest(getResources().getString(R.string.api_rooms) + currentSiteId, new Response.Listener<String>() {
             @Override
             public void onResponse(String string) {
                 string = new String(string.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
@@ -132,13 +132,14 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
     }
 
     private void initUI() {
-        Button buttonAdd = findViewById(R.id.button_add_new3);
+        Button btnAdd = findViewById(R.id.button_add_new3);
         Button btnSearch = findViewById(R.id.btnSearch);
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RoomActivity.this, RoomDetails.class);
-                intent.putExtra("projectId", siteId);
+                intent.putExtra("siteId", currentSiteId);
 
                 startActivity(intent);
             }
@@ -148,7 +149,7 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RoomActivity.this, SearchActivity.class);
-                intent.putExtra("projectId", siteId);
+                intent.putExtra("siteId", currentSiteId);
 
                 startActivity(intent);
             }

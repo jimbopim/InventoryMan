@@ -16,11 +16,11 @@ import com.jimla.inventorymanager.R;
 
 public class ImageDetails extends AppCompatActivity {
 
-    private TextView description;
-    private Button deleteButton;
+    private TextView tvDescription;
+    private Button btnDelete;
     private ImageView imageView;
 
-    private int photoId = 0;
+    private int currentPhotoId = 0;
 
     private Mode mode;
     enum Mode {
@@ -35,7 +35,7 @@ public class ImageDetails extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                photoId = extras.getInt("photoId");
+                currentPhotoId = extras.getInt("photoId");
             }
         } else {
             //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
@@ -43,7 +43,7 @@ public class ImageDetails extends AppCompatActivity {
 
         setupUI();
 
-        if (photoId == 0) {
+        if (currentPhotoId == 0) {
             setMode(Mode.CREATE);
         } else {
             setMode(Mode.VIEW);
@@ -56,24 +56,24 @@ public class ImageDetails extends AppCompatActivity {
 
         switch (mode) {
             case VIEW:
-                description.setFocusable(false);
-                description.setFocusableInTouchMode(false);
-                deleteButton.setVisibility(View.VISIBLE);
+                tvDescription.setFocusable(false);
+                tvDescription.setFocusableInTouchMode(false);
+                btnDelete.setVisibility(View.VISIBLE);
                 break;
             default:
-                description.setFocusable(true);
-                description.setFocusableInTouchMode(true);
-                deleteButton.setVisibility(View.VISIBLE);
+                tvDescription.setFocusable(true);
+                tvDescription.setFocusableInTouchMode(true);
+                btnDelete.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
     private void setupUI() {
         imageView = findViewById(R.id.imageView);
-        description = findViewById(R.id.tvDescription);
-        deleteButton = findViewById(R.id.btnDelete);
+        tvDescription = findViewById(R.id.tvDescription);
+        btnDelete = findViewById(R.id.btnDelete);
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new Thread(new Runnable() {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tvProjectDetailsHeader"
+        android:id="@+id/tvSiteDetailsHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/etProjectName"
+        android:id="@+id/etSiteName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -30,7 +30,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvProjectDetailsHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/tvSiteDetailsHeader" />
 
     <EditText
         android:id="@+id/etDescription"
@@ -40,9 +40,9 @@
         android:inputType="textMultiLine"
         android:minHeight="48dp"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/etProjectName"
-        app:layout_constraintStart_toStartOf="@+id/etProjectName"
-        app:layout_constraintTop_toBottomOf="@+id/etProjectName" />
+        app:layout_constraintEnd_toEndOf="@+id/etSiteName"
+        app:layout_constraintStart_toStartOf="@+id/etSiteName"
+        app:layout_constraintTop_toBottomOf="@+id/etSiteName" />
 
     <Button
         android:id="@+id/createButton"
@@ -99,9 +99,9 @@
         android:layout_marginStart="4dp"
         android:text="Name"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/etProjectName"
-        app:layout_constraintStart_toStartOf="@+id/etProjectName"
-        app:layout_constraintTop_toTopOf="@+id/etProjectName" />
+        app:layout_constraintBottom_toTopOf="@+id/etSiteName"
+        app:layout_constraintStart_toStartOf="@+id/etSiteName"
+        app:layout_constraintTop_toTopOf="@+id/etSiteName" />
 
     <TextView
         android:id="@+id/textView2"

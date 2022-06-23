@@ -17,9 +17,9 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     private final OnItemClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView name;
-        private final TextView description;
-        private final TextView roomId;
+        private final TextView tvName;
+        private final TextView tvDescription;
+        private final TextView tvRoomId;
 
         public ViewHolder(View view, OnItemClickListener listener) {
             super(view);
@@ -39,21 +39,21 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                 }
             });
 
-            name = view.findViewById(R.id.name);
-            description = view.findViewById(R.id.description);
-            roomId = view.findViewById(R.id.startDate);
+            tvName = view.findViewById(R.id.name);
+            tvDescription = view.findViewById(R.id.description);
+            tvRoomId = view.findViewById(R.id.startDate);
         }
 
         private TextView getName() {
-            return name;
+            return tvName;
         }
 
         private TextView getDescription() {
-            return description;
+            return tvDescription;
         }
 
         private TextView getRoomId() {
-            return roomId;
+            return tvRoomId;
         }
     }
 

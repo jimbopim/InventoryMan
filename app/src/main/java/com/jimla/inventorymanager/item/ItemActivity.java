@@ -34,7 +34,7 @@ public class ItemActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
     private final ArrayList<Item> items = new ArrayList<>();
 
-    private int roomId = 0;
+    private int currentRoomId = 0;
 
     private ProgressDialog dialog;
 
@@ -46,7 +46,7 @@ public class ItemActivity extends AppCompatActivity implements ItemAdapter.OnIte
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                roomId = extras.getInt("roomId");
+                currentRoomId = extras.getInt("roomId");
             }
         } else {
             //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
@@ -63,7 +63,7 @@ public class ItemActivity extends AppCompatActivity implements ItemAdapter.OnIte
         dialog.setMessage("Loading....");
         dialog.show();
 
-        StringRequest request = new StringRequest(getResources().getString(R.string.api_items) + roomId, new Response.Listener<String>() {
+        StringRequest request = new StringRequest(getResources().getString(R.string.api_items) + currentRoomId, new Response.Listener<String>() {
             @Override
             public void onResponse(String string) {
                 string = new String(string.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
@@ -118,12 +118,12 @@ public class ItemActivity extends AppCompatActivity implements ItemAdapter.OnIte
     }
 
     private void initUI() {
-        Button buttonAdd = findViewById(R.id.button_add_new2);
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
+        Button btnAdd = findViewById(R.id.button_add_new2);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ItemActivity.this, ItemDetails.class);
-                intent.putExtra("roomId", roomId);
+                intent.putExtra("roomId", currentRoomId);
 
                 startActivity(intent);
             }
@@ -135,7 +135,7 @@ public class ItemActivity extends AppCompatActivity implements ItemAdapter.OnIte
 
         Intent intent = new Intent(ItemActivity.this, ItemDetails.class);
         Item item = itemAdapter.getItem(position);
-        intent.putExtra("roomId", roomId);
+        intent.putExtra("roomId", currentRoomId);
         intent.putExtra("itemId", item.itemId);
         intent.putExtra("itemName", item.itemName);
         intent.putExtra("itemDescription", item.itemDescription);

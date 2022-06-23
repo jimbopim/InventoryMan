@@ -1,4 +1,4 @@
-package com.jimla.inventorymanager.project;
+package com.jimla.inventorymanager.site;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +11,15 @@ import com.jimla.inventorymanager.R;
 
 import java.util.ArrayList;
 
-public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
+public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.ViewHolder> {
 
     private final ArrayList<Site> sites;
     private final OnItemClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView name;
-        private final TextView description;
-        private final TextView startDate;
+        private final TextView tvName;
+        private final TextView tvDescription;
+        private final TextView tvStartDate;
 
         public ViewHolder(View view, OnItemClickListener listener) {
             super(view);
@@ -39,25 +39,25 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
                 }
             });
 
-            name = view.findViewById(R.id.name);
-            description = view.findViewById(R.id.description);
-            startDate = view.findViewById(R.id.startDate);
+            tvName = view.findViewById(R.id.name);
+            tvDescription = view.findViewById(R.id.description);
+            tvStartDate = view.findViewById(R.id.startDate);
         }
 
         private TextView getName() {
-            return name;
+            return tvName;
         }
 
         private TextView getDescription() {
-            return description;
+            return tvDescription;
         }
 
         private TextView getStartDate() {
-            return startDate;
+            return tvStartDate;
         }
     }
 
-    public ProjectAdapter(ArrayList<Site> sites, OnItemClickListener listener) {
+    public SiteAdapter(ArrayList<Site> sites, OnItemClickListener listener) {
         this.sites = sites;
         this.listener = listener;
     }

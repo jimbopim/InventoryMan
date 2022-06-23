@@ -22,7 +22,7 @@
         android:theme="@style/Theme.InventoryManager">
 
         <activity
-            android:name="com.jimla.inventorymanager.project.ProjectActivity"
+            android:name="com.jimla.inventorymanager.site.SiteActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -31,7 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.jimla.inventorymanager.project.ProjectDetails"></activity>
+        <activity android:name="com.jimla.inventorymanager.site.SiteDetails"></activity>
         <activity android:name="com.jimla.inventorymanager.room.RoomActivity"></activity>
         <activity android:name="com.jimla.inventorymanager.room.RoomDetails"></activity>
         <activity android:name="com.jimla.inventorymanager.item.ItemDetails"></activity>

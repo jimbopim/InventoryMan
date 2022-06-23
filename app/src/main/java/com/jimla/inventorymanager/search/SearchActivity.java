@@ -59,7 +59,7 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.O
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                currentSiteId = extras.getInt("projectId");
+                currentSiteId = extras.getInt("siteId");
             }
         } else {
             //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
@@ -153,7 +153,6 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.O
     }
 
     private void initUI() {
-
         etSearch = findViewById(R.id.etSearch);
 
         Button btnSearch = findViewById(R.id.btnSearch);

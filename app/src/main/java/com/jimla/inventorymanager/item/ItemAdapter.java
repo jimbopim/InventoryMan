@@ -17,8 +17,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private final OnItemClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView name;
-        private final TextView description;
+        private final TextView tvName;
+        private final TextView tvDescription;
 
         public ViewHolder(View view, OnItemClickListener listener) {
             super(view);
@@ -30,16 +30,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 }
             });
 
-            name = view.findViewById(R.id.name);
-            description = view.findViewById(R.id.description);
+            tvName = view.findViewById(R.id.name);
+            tvDescription = view.findViewById(R.id.description);
         }
 
         private TextView getName() {
-            return name;
+            return tvName;
         }
 
         private TextView getDescription() {
-            return description;
+            return tvDescription;
         }
     }
 

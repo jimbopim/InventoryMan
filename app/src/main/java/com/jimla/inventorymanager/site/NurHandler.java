@@ -1,4 +1,4 @@
-package com.jimla.inventorymanager.project;
+package com.jimla.inventorymanager.site;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.nordicid.nurapi.BleScanner;
 import com.nordicid.nurapi.NurApi;
@@ -34,7 +33,6 @@ import com.nordicid.nurapi.NurIRConfig;
 import com.nordicid.nurapi.NurSmartPairSupport;
 import com.nordicid.nurapi.NurTag;
 import com.nordicid.nurapi.NurTagStorage;
-import com.nordicid.tdt.EPCTagEngine;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

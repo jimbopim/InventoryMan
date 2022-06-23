@@ -18,9 +18,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private final OnItemClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView name;
-        private final TextView description;
-        private final TextView room;
+        private final TextView tvName;
+        private final TextView tvDescription;
+        private final TextView tvRoomId;
 
         public ViewHolder(View view, OnItemClickListener listener) {
             super(view);
@@ -40,21 +40,21 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 }
             });
 
-            name = view.findViewById(R.id.name);
-            description = view.findViewById(R.id.description);
-            room = view.findViewById(R.id.tvRoom);
+            tvName = view.findViewById(R.id.name);
+            tvDescription = view.findViewById(R.id.description);
+            tvRoomId = view.findViewById(R.id.tvRoom);
         }
 
         private TextView getName() {
-            return name;
+            return tvName;
         }
 
         private TextView getDescription() {
-            return description;
+            return tvDescription;
         }
 
         private TextView getRoom() {
-            return room;
+            return tvRoomId;
         }
     }
 

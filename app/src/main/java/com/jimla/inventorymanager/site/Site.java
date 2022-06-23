@@ -1,4 +1,4 @@
-package com.jimla.inventorymanager.project;
+package com.jimla.inventorymanager.site;
 
 public class Site {
     int siteId;

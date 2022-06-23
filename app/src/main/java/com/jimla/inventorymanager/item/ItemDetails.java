@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jimla.inventorymanager.R;
-import com.jimla.inventorymanager.project.NurHandler;
+import com.jimla.inventorymanager.site.NurHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,21 +39,21 @@ import java.util.Date;
 
 public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnItemClickListener {
 
-    private TextView itemDetailsHeader;
-    private TextView itemName;
-    private TextView itemDescription;
-    private TextView itemRfid;
-    private Spinner conditionSpinner;
-    private Spinner typeSpinner;
-    private Button scanButton;
-    private Button photoButton;
-    private Button createButton;
-    private Button deleteButton;
-    private Button editButton;
+    private TextView tvItemDetailsHeader;
+    private TextView tvItemName;
+    private TextView tvItemDescription;
+    private TextView tvItemRfid;
+    private Spinner spCondition;
+    private Spinner spType;
+    private Button btnScan;
+    private Button btnPhoto;
+    private Button btnCreate;
+    private Button btnDelete;
+    private Button btnEdit;
 
     private RecyclerView recyclerViewImages;
 
-    private Item item;
+    private Item currentItem;
 
     private ArrayList<Image> images;
 
@@ -73,12 +73,10 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
 
-        //initDB();
-
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                item = new Item(
+                currentItem = new Item(
                         extras.getInt("itemId"),
                         extras.getString("itemName"),
                         extras.getString("itemDescription"));
@@ -90,7 +88,7 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
         initRecyclerView();
         setupUI();
 
-        if (item == null) {
+        if (currentItem == null) {
             setMode(Mode.CREATE);
         } else {
             setMode(Mode.VIEW);
@@ -107,7 +105,7 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
                             // There are no request codes
                             Intent data = result.getData();
                             Bundle extras = data.getExtras();
-                            itemRfid.setText(extras.getString("tagEpc"));
+                            tvItemRfid.setText(extras.getString("tagEpc"));
                         }
                     }
                 });
@@ -147,15 +145,15 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
                 itemDescription.setFocusableInTouchMode(true);
                 itemRfid.setFocusable(false);
                 itemRfid.setFocusableInTouchMode(false);*/
-                photoButton.setVisibility(View.VISIBLE);
-                scanButton.setVisibility(View.VISIBLE);
-                scanButton.setText("Read Tag");
-                deleteButton.setVisibility(View.INVISIBLE);
-                editButton.setVisibility(View.INVISIBLE);
-                createButton.setVisibility(View.VISIBLE);
-                itemDetailsHeader.setText(getString(R.string.item_create));
-                itemName.setEnabled(true);
-                itemDescription.setEnabled(true);
+                btnPhoto.setVisibility(View.VISIBLE);
+                btnScan.setVisibility(View.VISIBLE);
+                btnScan.setText("Read Tag");
+                btnDelete.setVisibility(View.INVISIBLE);
+                btnEdit.setVisibility(View.INVISIBLE);
+                btnCreate.setVisibility(View.VISIBLE);
+                tvItemDetailsHeader.setText(getString(R.string.item_create));
+                tvItemName.setEnabled(true);
+                tvItemDescription.setEnabled(true);
                 break;
             case EDIT:
 /*                itemName.setFocusable(true);
@@ -164,15 +162,15 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
                 itemDescription.setFocusableInTouchMode(true);
                 itemRfid.setFocusable(false);
                 itemRfid.setFocusableInTouchMode(false);*/
-                photoButton.setVisibility(View.VISIBLE);
-                scanButton.setVisibility(View.VISIBLE);
-                scanButton.setText("Start Scan Tag");
-                deleteButton.setVisibility(View.VISIBLE);
-                editButton.setText(getString(R.string.save_button));
-                createButton.setVisibility(View.INVISIBLE);
-                itemDetailsHeader.setText(getString(R.string.item_edit));
-                itemName.setEnabled(true);
-                itemDescription.setEnabled(true);
+                btnPhoto.setVisibility(View.VISIBLE);
+                btnScan.setVisibility(View.VISIBLE);
+                btnScan.setText("Start Scan Tag");
+                btnDelete.setVisibility(View.VISIBLE);
+                btnEdit.setText(getString(R.string.save_button));
+                btnCreate.setVisibility(View.INVISIBLE);
+                tvItemDetailsHeader.setText(getString(R.string.item_edit));
+                tvItemName.setEnabled(true);
+                tvItemDescription.setEnabled(true);
                 break;
             case VIEW:
 /*                itemName.setFocusable(false);
@@ -181,15 +179,15 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
                 itemDescription.setFocusableInTouchMode(false);
                 itemRfid.setFocusable(false);
                 itemRfid.setFocusableInTouchMode(false);*/
-                photoButton.setVisibility(View.INVISIBLE);
-                scanButton.setVisibility(View.INVISIBLE);
-                scanButton.setText("");
-                deleteButton.setVisibility(View.INVISIBLE);
-                editButton.setText(getString(R.string.edit_button));
-                createButton.setVisibility(View.INVISIBLE);
-                itemDetailsHeader.setText(getString(R.string.item_view));
-                itemName.setEnabled(false);
-                itemDescription.setEnabled(false);
+                btnPhoto.setVisibility(View.INVISIBLE);
+                btnScan.setVisibility(View.INVISIBLE);
+                btnScan.setText("");
+                btnDelete.setVisibility(View.INVISIBLE);
+                btnEdit.setText(getString(R.string.edit_button));
+                btnCreate.setVisibility(View.INVISIBLE);
+                tvItemDetailsHeader.setText(getString(R.string.item_view));
+                tvItemName.setEnabled(false);
+                tvItemDescription.setEnabled(false);
                 break;
             case SCAN:
 /*                itemName.setFocusable(false);
@@ -198,31 +196,31 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
                 itemDescription.setFocusableInTouchMode(false);
                 itemRfid.setFocusable(false);
                 itemRfid.setFocusableInTouchMode(false);*/
-                photoButton.setVisibility(View.INVISIBLE);
-                scanButton.setVisibility(View.VISIBLE);
-                scanButton.setText("Scan Tag");
-                deleteButton.setVisibility(View.INVISIBLE);
-                editButton.setText("Return");
-                createButton.setVisibility(View.INVISIBLE);
-                itemDetailsHeader.setText("Scan Tag");
-                itemName.setEnabled(false);
-                itemDescription.setEnabled(false);
+                btnPhoto.setVisibility(View.INVISIBLE);
+                btnScan.setVisibility(View.VISIBLE);
+                btnScan.setText("Scan Tag");
+                btnDelete.setVisibility(View.INVISIBLE);
+                btnEdit.setText("Return");
+                btnCreate.setVisibility(View.INVISIBLE);
+                tvItemDetailsHeader.setText("Scan Tag");
+                tvItemName.setEnabled(false);
+                tvItemDescription.setEnabled(false);
                 break;
         }
     }
 
     private void setupUI() {
-        itemDetailsHeader = findViewById(R.id.tvItemDetailsHeader);
-        itemName = findViewById(R.id.etItemName);
-        itemDescription = findViewById(R.id.etDescription);
-        itemRfid = findViewById(R.id.etRfid);
-        typeSpinner = findViewById(R.id.spItemType);
-        conditionSpinner = findViewById(R.id.spCondition);
-        photoButton = findViewById(R.id.photoButton);
-        scanButton = findViewById(R.id.scanButton);
-        createButton = findViewById(R.id.createButton2);
-        editButton = findViewById(R.id.editButton2);
-        deleteButton = findViewById(R.id.deleteButton2);
+        tvItemDetailsHeader = findViewById(R.id.tvItemDetailsHeader);
+        tvItemName = findViewById(R.id.etItemName);
+        tvItemDescription = findViewById(R.id.etDescription);
+        tvItemRfid = findViewById(R.id.etRfid);
+        spType = findViewById(R.id.spItemType);
+        spCondition = findViewById(R.id.spCondition);
+        btnPhoto = findViewById(R.id.photoButton);
+        btnScan = findViewById(R.id.scanButton);
+        btnCreate = findViewById(R.id.createButton2);
+        btnEdit = findViewById(R.id.editButton2);
+        btnDelete = findViewById(R.id.deleteButton2);
 /*
         Calendar calendar = Calendar.getInstance();
 
@@ -238,17 +236,17 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
             }
         }*/
 
-        itemName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        tvItemName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    itemName.clearFocus();
+                    tvItemName.clearFocus();
                 }
                 return false;
             }
         });
 
-        scanButton.setOnClickListener(new View.OnClickListener() {
+        btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 /*                Intent intent = new Intent(ItemDetails.this, Nur.class);
@@ -260,24 +258,24 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
                         setMode(Mode.SCAN);
                         break;
                     case CREATE:
-                        itemRfid.setText(NurHandler.getInstance().getNearestTagEpc());
+                        tvItemRfid.setText(NurHandler.getInstance().getNearestTagEpc());
                         break;
                     case SCAN:
-                        itemRfid.setText(NurHandler.getInstance().getNearestTagEpc());
+                        tvItemRfid.setText(NurHandler.getInstance().getNearestTagEpc());
                         setMode(Mode.EDIT);
                         break;
                 }
             }
         });
 
-        createButton.setOnClickListener(new View.OnClickListener() {
+        btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createItem();
             }
         });
 
-        photoButton.setOnClickListener(new View.OnClickListener() {
+        btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -288,7 +286,7 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
             }
         });
 
-        editButton.setOnClickListener(new View.OnClickListener() {
+        btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch (mode) {
@@ -306,7 +304,7 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
             }
         });
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new Thread(new Runnable() {
@@ -320,13 +318,13 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
 
         ArrayAdapter<String> conditionSpinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, getResources().getStringArray(R.array.pref_condition));
         conditionSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        conditionSpinner.setAdapter(conditionSpinnerAdapter);
-        conditionSpinner.setSelection(0, false);
+        spCondition.setAdapter(conditionSpinnerAdapter);
+        spCondition.setSelection(0, false);
 
         ArrayAdapter<String> typeSpinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, getResources().getStringArray(R.array.pref_type));
         typeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typeSpinner.setAdapter(typeSpinnerAdapter);
-        typeSpinner.setSelection(0, false);
+        spType.setAdapter(typeSpinnerAdapter);
+        spType.setSelection(0, false);
     }
 
     private void initRecyclerView() {
@@ -470,10 +468,10 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
     }
 
     private void updateFieldsFromItem() {
-        if (item != null) {
-            itemName.setText(item.itemName);
-            itemRfid.setText(item.itemEpc);
-            itemDescription.setText(item.itemDescription);
+        if (currentItem != null) {
+            tvItemName.setText(currentItem.itemName);
+            tvItemRfid.setText(currentItem.itemEpc);
+            tvItemDescription.setText(currentItem.itemDescription);
         }
     }
 

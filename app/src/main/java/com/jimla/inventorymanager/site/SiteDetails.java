@@ -1,4 +1,4 @@
-package com.jimla.inventorymanager.project;
+package com.jimla.inventorymanager.site;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,17 +13,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.jimla.inventorymanager.R;
 import com.jimla.inventorymanager.room.RoomActivity;
 
-public class ProjectDetails extends AppCompatActivity {
+public class SiteDetails extends AppCompatActivity {
 
-    private TextView projectDetailsHeader;
-    private TextView projectName;
-    private TextView description;
-    private Button openRoomsButton;
-    private Button createButton;
-    private Button deleteButton;
-    private Button editButton;
+    private TextView tvSiteDetailsHeader;
+    private TextView tvSiteName;
+    private TextView tvSiteDescription;
+    private Button btnOpenRooms;
+    private Button btnCreate;
+    private Button btnDelete;
+    private Button btnEdit;
 
-    private Site site;
+    private Site currentSite;
 
     private Mode mode;
     enum Mode {
@@ -33,12 +33,12 @@ public class ProjectDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_project_details);
+        setContentView(R.layout.activity_site_details);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                site = new Site(
+                currentSite = new Site(
                         extras.getInt("siteId"),
                         extras.getInt("siteType"),
                         extras.getString("siteName"),
@@ -51,7 +51,7 @@ public class ProjectDetails extends AppCompatActivity {
 
         setupUI();
 
-        if (site == null) {
+        if (currentSite == null) {
             setMode(Mode.CREATE);
         } else {
             setMode(Mode.VIEW);
@@ -64,78 +64,78 @@ public class ProjectDetails extends AppCompatActivity {
 
         switch (mode) {
             case CREATE:
-                projectName.setFocusable(true);
-                projectName.setFocusableInTouchMode(true);
-                description.setFocusable(true);
-                description.setFocusableInTouchMode(true);
-                deleteButton.setVisibility(View.INVISIBLE);
-                editButton.setVisibility(View.INVISIBLE);
-                createButton.setVisibility(View.VISIBLE);
-                openRoomsButton.setVisibility(View.INVISIBLE);
-                projectDetailsHeader.setText(getString(R.string.project_create));
+                tvSiteName.setFocusable(true);
+                tvSiteName.setFocusableInTouchMode(true);
+                tvSiteDescription.setFocusable(true);
+                tvSiteDescription.setFocusableInTouchMode(true);
+                btnDelete.setVisibility(View.INVISIBLE);
+                btnEdit.setVisibility(View.INVISIBLE);
+                btnCreate.setVisibility(View.VISIBLE);
+                btnOpenRooms.setVisibility(View.INVISIBLE);
+                tvSiteDetailsHeader.setText(getString(R.string.site_create));
                 break;
             case EDIT:
-                projectName.setFocusable(true);
-                projectName.setFocusableInTouchMode(true);
-                description.setFocusable(true);
-                description.setFocusableInTouchMode(true);
-                createButton.setVisibility(View.INVISIBLE);
-                openRoomsButton.setVisibility(View.INVISIBLE);
-                deleteButton.setVisibility(View.VISIBLE);
-                projectDetailsHeader.setText(getString(R.string.project_edit));
-                editButton.setText(getString(R.string.save_button));
+                tvSiteName.setFocusable(true);
+                tvSiteName.setFocusableInTouchMode(true);
+                tvSiteDescription.setFocusable(true);
+                tvSiteDescription.setFocusableInTouchMode(true);
+                btnCreate.setVisibility(View.INVISIBLE);
+                btnOpenRooms.setVisibility(View.INVISIBLE);
+                btnDelete.setVisibility(View.VISIBLE);
+                tvSiteDetailsHeader.setText(getString(R.string.site_edit));
+                btnEdit.setText(getString(R.string.save_button));
                 break;
             case VIEW:
-                projectName.setFocusable(false);
-                projectName.setFocusableInTouchMode(false);
-                description.setFocusable(false);
-                description.setFocusableInTouchMode(false);
-                createButton.setVisibility(View.INVISIBLE);
-                openRoomsButton.setVisibility(View.VISIBLE);
-                deleteButton.setVisibility(View.INVISIBLE);
-                projectDetailsHeader.setText(getString(R.string.project_view));
-                editButton.setText(getString(R.string.edit_button));
+                tvSiteName.setFocusable(false);
+                tvSiteName.setFocusableInTouchMode(false);
+                tvSiteDescription.setFocusable(false);
+                tvSiteDescription.setFocusableInTouchMode(false);
+                btnCreate.setVisibility(View.INVISIBLE);
+                btnOpenRooms.setVisibility(View.VISIBLE);
+                btnDelete.setVisibility(View.INVISIBLE);
+                tvSiteDetailsHeader.setText(getString(R.string.site_view));
+                btnEdit.setText(getString(R.string.edit_button));
                 break;
         }
     }
 
     private void setupUI() {
-        projectDetailsHeader = findViewById(R.id.tvProjectDetailsHeader);
-        projectName = findViewById(R.id.etProjectName);
-        description = findViewById(R.id.etDescription);
-        openRoomsButton = findViewById(R.id.openItemsButton);
-        createButton = findViewById(R.id.createButton);
-        editButton = findViewById(R.id.editButton);
-        deleteButton = findViewById(R.id.deleteButton);
+        tvSiteDetailsHeader = findViewById(R.id.tvSiteDetailsHeader);
+        tvSiteName = findViewById(R.id.etSiteName);
+        tvSiteDescription = findViewById(R.id.etDescription);
+        btnOpenRooms = findViewById(R.id.openItemsButton);
+        btnCreate = findViewById(R.id.createButton);
+        btnEdit = findViewById(R.id.editButton);
+        btnDelete = findViewById(R.id.deleteButton);
 
-        projectName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        tvSiteName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    projectName.clearFocus();
+                    tvSiteName.clearFocus();
                 }
                 return false;
             }
         });
 
-        openRoomsButton.setOnClickListener(new View.OnClickListener() {
+        btnOpenRooms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ProjectDetails.this, RoomActivity.class);
-                intent.putExtra("siteId", site.siteId);
+                Intent intent = new Intent(SiteDetails.this, RoomActivity.class);
+                intent.putExtra("siteId", currentSite.siteId);
 
                 startActivity(intent);
             }
         });
 
-        createButton.setOnClickListener(new View.OnClickListener() {
+        btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createItem();
             }
         });
 
-        editButton.setOnClickListener(new View.OnClickListener() {
+        btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch (mode) {
@@ -150,7 +150,7 @@ public class ProjectDetails extends AppCompatActivity {
             }
         });
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new Thread(new Runnable() {
@@ -199,9 +199,9 @@ public class ProjectDetails extends AppCompatActivity {
     }
 
     private void updateFieldsFromItem() {
-        if (site != null) {
-            projectName.setText(site.siteName);
-            description.setText(site.description);
+        if (currentSite != null) {
+            tvSiteName.setText(currentSite.siteName);
+            tvSiteDescription.setText(currentSite.description);
         }
     }
 }

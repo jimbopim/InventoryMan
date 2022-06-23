@@ -1,4 +1,4 @@
-package com.jimla.inventorymanager.project;
+package com.jimla.inventorymanager.site;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,9 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jimla.inventorymanager.R;
 import com.jimla.inventorymanager.room.RoomActivity;
-import com.nordicid.nurapi.NurApiAutoConnectTransport;
 import com.nordicid.nurapi.NurDeviceListActivity;
-import com.nordicid.nurapi.NurDeviceSpec;
 import com.nordicid.nurapi.NurEventIOChange;
 import com.nordicid.nurapi.NurTag;
 import com.nordicid.nurapi.NurTagStorage;
@@ -44,12 +42,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-public class ProjectActivity extends AppCompatActivity implements ProjectAdapter.OnItemClickListener, NurHandler.InventoryControllerListener {
+public class SiteActivity extends AppCompatActivity implements SiteAdapter.OnItemClickListener, NurHandler.InventoryControllerListener {
 
     private RecyclerView recyclerView;
-    private ProjectAdapter projectAdapter;
+    private SiteAdapter siteAdapter;
 
-    TextView tvConn;
+    TextView tvConnection;
 
     private final ArrayList<Site> sites = new ArrayList<>();
 
@@ -58,7 +56,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_project);
+        setContentView(R.layout.activity_site);
 
         trustEveryone(); //TODO OBS ENDAST TESTSYFTE
         initRecyclerView();
@@ -72,7 +70,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
         nurHandler.setInventoryControllerListener(this);
 
         //nurHandler.selectDeviceForConnection(this); //TODO Flytta till settings
-        showOnUI(tvConn, "Connecting reader...");
+        showOnUI(tvConnection, "Connecting reader...");
         nurHandler.autoSelectConnection(this);
     }
 
@@ -99,7 +97,7 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
             }
         });
 
-        RequestQueue rQueue = Volley.newRequestQueue(ProjectActivity.this);
+        RequestQueue rQueue = Volley.newRequestQueue(SiteActivity.this);
         rQueue.add(request);
     }
 
@@ -139,13 +137,13 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
     }
 
     private void initUI() {
-        tvConn = findViewById(R.id.tvConn);
+        tvConnection = findViewById(R.id.tvConn);
 
         Button buttonAdd = findViewById(R.id.button_add_new);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ProjectActivity.this, ProjectDetails.class);
+                Intent intent = new Intent(SiteActivity.this, SiteDetails.class);
 
                 startActivity(intent);
             }
@@ -154,8 +152,8 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
 
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(ProjectActivity.this, RoomActivity.class);
-        Site site = projectAdapter.getSite(position);
+        Intent intent = new Intent(SiteActivity.this, RoomActivity.class);
+        Site site = siteAdapter.getSite(position);
         intent.putExtra("siteId", site.siteId);
 
         startActivity(intent);
@@ -163,9 +161,9 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
 
     @Override
     public void onItemLongClick(int position) {
-        Intent intent = new Intent(ProjectActivity.this, ProjectDetails.class);
+        Intent intent = new Intent(SiteActivity.this, SiteDetails.class);
 
-        Site site = projectAdapter.getSite(position);
+        Site site = siteAdapter.getSite(position);
         intent.putExtra("siteId", site.siteId);
         intent.putExtra("siteType", site.siteType);
         intent.putExtra("siteName", site.siteName);
@@ -200,16 +198,16 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
     }
 
     private void setAdapter() {
-        ProjectAdapter.OnItemClickListener listener = this;
+        SiteAdapter.OnItemClickListener listener = this;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                projectAdapter = new ProjectAdapter(sites, listener);
+                siteAdapter = new SiteAdapter(sites, listener);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        recyclerView.setAdapter(projectAdapter);
+                        recyclerView.setAdapter(siteAdapter);
                     }
                 });
             }
@@ -288,12 +286,12 @@ public class ProjectActivity extends AppCompatActivity implements ProjectAdapter
 
     @Override
     public void readerDisconnected() {
-        showOnUI(tvConn, "Reader disconnected");
+        showOnUI(tvConnection, "Reader disconnected");
     }
 
     @Override
     public void readerConnected() {
-        showOnUI(tvConn, "Reader connected");
+        showOnUI(tvConnection, "Reader connected");
     }
 
     @Override

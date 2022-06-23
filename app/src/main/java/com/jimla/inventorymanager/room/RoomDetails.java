@@ -16,16 +16,16 @@ import com.jimla.inventorymanager.item.ItemActivity;
 
 public class RoomDetails extends AppCompatActivity {
 
-    private TextView roomDetailsHeader;
+    private TextView tvRoomDetailsHeader;
     private TextView tvRoomName;
-    private NumberPicker floorPicker;
+    private NumberPicker pkrFloor;
     private TextView tvDescription;
-    private Button openRoomsButton;
-    private Button createButton;
-    private Button deleteButton;
-    private Button editButton;
+    private Button btnOpenRooms;
+    private Button btnCreate;
+    private Button btnDelete;
+    private Button btnEdit;
 
-    private Room room;
+    private Room currentRoom;
 
     private Mode mode;
     enum Mode {
@@ -40,7 +40,7 @@ public class RoomDetails extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                room = new Room(
+                currentRoom = new Room(
                         extras.getInt("roomId"),
                         extras.getString("roomName"),
                         extras.getString("roomDescription"));
@@ -51,7 +51,7 @@ public class RoomDetails extends AppCompatActivity {
 
         setupUI();
 
-        if (room == null) {
+        if (currentRoom == null) {
             setMode(Mode.CREATE);
         } else {
             setMode(Mode.VIEW);
@@ -68,55 +68,55 @@ public class RoomDetails extends AppCompatActivity {
                 tvRoomName.setFocusableInTouchMode(true);
                 tvDescription.setFocusable(true);
                 tvDescription.setFocusableInTouchMode(true);
-                deleteButton.setVisibility(View.INVISIBLE);
-                editButton.setVisibility(View.INVISIBLE);
-                createButton.setVisibility(View.VISIBLE);
-                openRoomsButton.setVisibility(View.INVISIBLE);
-                floorPicker.setFocusable(true);
-                floorPicker.setFocusableInTouchMode(true);
-                floorPicker.setEnabled(true);
-                roomDetailsHeader.setText(getString(R.string.room_create));
+                btnDelete.setVisibility(View.INVISIBLE);
+                btnEdit.setVisibility(View.INVISIBLE);
+                btnCreate.setVisibility(View.VISIBLE);
+                btnOpenRooms.setVisibility(View.INVISIBLE);
+                pkrFloor.setFocusable(true);
+                pkrFloor.setFocusableInTouchMode(true);
+                pkrFloor.setEnabled(true);
+                tvRoomDetailsHeader.setText(getString(R.string.room_create));
                 break;
             case EDIT:
                 tvRoomName.setFocusable(true);
                 tvRoomName.setFocusableInTouchMode(true);
                 tvDescription.setFocusable(true);
                 tvDescription.setFocusableInTouchMode(true);
-                createButton.setVisibility(View.INVISIBLE);
-                openRoomsButton.setVisibility(View.INVISIBLE);
-                deleteButton.setVisibility(View.VISIBLE);
-                floorPicker.setFocusable(true);
-                floorPicker.setFocusableInTouchMode(true);
-                roomDetailsHeader.setText(getString(R.string.room_edit));
-                floorPicker.setEnabled(true);
-                editButton.setText(getString(R.string.save_button));
+                btnCreate.setVisibility(View.INVISIBLE);
+                btnOpenRooms.setVisibility(View.INVISIBLE);
+                btnDelete.setVisibility(View.VISIBLE);
+                pkrFloor.setFocusable(true);
+                pkrFloor.setFocusableInTouchMode(true);
+                tvRoomDetailsHeader.setText(getString(R.string.room_edit));
+                pkrFloor.setEnabled(true);
+                btnEdit.setText(getString(R.string.save_button));
                 break;
             case VIEW:
                 tvRoomName.setFocusable(false);
                 tvRoomName.setFocusableInTouchMode(false);
                 tvDescription.setFocusable(false);
                 tvDescription.setFocusableInTouchMode(false);
-                createButton.setVisibility(View.INVISIBLE);
-                openRoomsButton.setVisibility(View.VISIBLE);
-                deleteButton.setVisibility(View.INVISIBLE);
-                roomDetailsHeader.setText(getString(R.string.room_view));
-                floorPicker.setFocusable(false);
-                floorPicker.setFocusableInTouchMode(false);
-                floorPicker.setEnabled(false);
-                editButton.setText(getString(R.string.edit_button));
+                btnCreate.setVisibility(View.INVISIBLE);
+                btnOpenRooms.setVisibility(View.VISIBLE);
+                btnDelete.setVisibility(View.INVISIBLE);
+                tvRoomDetailsHeader.setText(getString(R.string.room_view));
+                pkrFloor.setFocusable(false);
+                pkrFloor.setFocusableInTouchMode(false);
+                pkrFloor.setEnabled(false);
+                btnEdit.setText(getString(R.string.edit_button));
                 break;
         }
     }
 
     private void setupUI() {
-        roomDetailsHeader = findViewById(R.id.tvRoomDetailsHeader);
+        tvRoomDetailsHeader = findViewById(R.id.tvRoomDetailsHeader);
         tvRoomName = findViewById(R.id.etRoomName);
-        floorPicker = findViewById(R.id.floorPicker);
+        pkrFloor = findViewById(R.id.floorPicker);
         tvDescription = findViewById(R.id.etDescription);
-        openRoomsButton = findViewById(R.id.openItemsButton);
-        createButton = findViewById(R.id.createButton);
-        editButton = findViewById(R.id.editButton);
-        deleteButton = findViewById(R.id.deleteButton);
+        btnOpenRooms = findViewById(R.id.openItemsButton);
+        btnCreate = findViewById(R.id.createButton);
+        btnEdit = findViewById(R.id.editButton);
+        btnDelete = findViewById(R.id.deleteButton);
 
         tvRoomName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -128,24 +128,24 @@ public class RoomDetails extends AppCompatActivity {
             }
         });
 
-        openRoomsButton.setOnClickListener(new View.OnClickListener() {
+        btnOpenRooms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RoomDetails.this, ItemActivity.class);
-                intent.putExtra("roomId", room.roomId);
+                intent.putExtra("roomId", currentRoom.roomId);
 
                 startActivity(intent);
             }
         });
 
-        createButton.setOnClickListener(new View.OnClickListener() {
+        btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 createItem();
             }
         });
 
-        editButton.setOnClickListener(new View.OnClickListener() {
+        btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switch (mode) {
@@ -160,7 +160,7 @@ public class RoomDetails extends AppCompatActivity {
             }
         });
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new Thread(new Runnable() {
@@ -186,11 +186,11 @@ public class RoomDetails extends AppCompatActivity {
             else
                 choices[i + 10] = "Floor " + (i - 1);
         }
-        floorPicker.setMinValue(0);
-        floorPicker.setMaxValue(max - 1);
-        floorPicker.setDisplayedValues(choices);
-        floorPicker.setValue(10);
-        floorPicker.setWrapSelectorWheel(false);
+        pkrFloor.setMinValue(0);
+        pkrFloor.setMaxValue(max - 1);
+        pkrFloor.setDisplayedValues(choices);
+        pkrFloor.setValue(10);
+        pkrFloor.setWrapSelectorWheel(false);
     }
 
     private void createItem() {
@@ -229,9 +229,9 @@ public class RoomDetails extends AppCompatActivity {
     }
 
     private void updateFieldsFromItem() {
-        if (room != null) {
-            tvRoomName.setText(room.roomName);
-            tvDescription.setText(room.roomDescription);
+        if (currentRoom != null) {
+            tvRoomName.setText(currentRoom.roomName);
+            tvDescription.setText(currentRoom.roomDescription);
             //floorPicker.setValue(item.floor);
         }
     }
