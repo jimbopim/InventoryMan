@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.common.BaseActivity;
 import com.jimla.inventorymanager.item.Item;
 import com.jimla.inventorymanager.item.ItemActivity;
 import com.jimla.inventorymanager.item.ItemDetails;
@@ -33,7 +34,7 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class SearchActivity extends AppCompatActivity implements SearchAdapter.OnItemClickListener {
+public class SearchActivity extends BaseActivity implements SearchAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
     private SearchAdapter searchAdapter;
@@ -43,12 +44,13 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.O
     private final ArrayList<Item> items = new ArrayList<>();
 
     private int currentSiteId = 0;
+    private String restoredSearchString = null;
 
     private ProgressDialog dialog;
 
     private int tries = 1;
 
-    private String baseUrl = "https://sekinsvinteg2t.kinnarps.com:8122/api/inventory/item?";
+    private final String baseUrl = "https://sekinsvinteg2t.kinnarps.com:8122/api/inventory/item?";
     //https://sekinsvinteg2t.kinnarps.com:8122/api/inventory/item?siteId=1&pageNumber=1&hits=3&searchKey=motus
 
     @Override
@@ -62,11 +64,22 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.O
                 currentSiteId = extras.getInt("siteId");
             }
         } else {
-            //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
+            currentSiteId = savedInstanceState.getInt("siteId");
+            restoredSearchString = savedInstanceState.getString("searchString");
         }
 
         initRecyclerView();
         initUI();
+
+        if(restoredSearchString != null)
+            fetchData();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("siteId", currentSiteId);
+        savedInstanceState.putString("searchString", etSearch.getText().toString());
     }
 
     private String getPar(String name, String value) {
@@ -154,6 +167,8 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.O
 
     private void initUI() {
         etSearch = findViewById(R.id.etSearch);
+        if(restoredSearchString != null)
+            etSearch.setText(restoredSearchString);
 
         Button btnSearch = findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(new View.OnClickListener() {

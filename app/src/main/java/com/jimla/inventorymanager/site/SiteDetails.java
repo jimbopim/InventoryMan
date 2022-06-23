@@ -8,12 +8,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.common.BaseActivity;
 import com.jimla.inventorymanager.room.RoomActivity;
 
-public class SiteDetails extends AppCompatActivity {
+public class SiteDetails extends BaseActivity {
 
     private TextView tvSiteDetailsHeader;
     private TextView tvSiteName;
@@ -46,7 +48,12 @@ public class SiteDetails extends AppCompatActivity {
                         extras.getInt("siteStartDate"));
             }
         } else {
-            //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
+            currentSite = new Site(
+                    savedInstanceState.getInt("siteId"),
+                    savedInstanceState.getInt("siteType"),
+                    savedInstanceState.getString("siteName"),
+                    savedInstanceState.getString("siteDescription"),
+                    savedInstanceState.getInt("siteStartDate"));
         }
 
         setupUI();
@@ -57,6 +64,17 @@ public class SiteDetails extends AppCompatActivity {
             setMode(Mode.VIEW);
             updateFieldsFromItem();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("siteId", currentSite.siteId);
+        savedInstanceState.putInt("siteType", currentSite.siteType);
+        savedInstanceState.putString("siteName", currentSite.siteName);
+        savedInstanceState.putString("siteDescription", currentSite.description);
+        savedInstanceState.putInt("siteStartDate", currentSite.startDate);
+
     }
 
     private void setMode(Mode mode) {

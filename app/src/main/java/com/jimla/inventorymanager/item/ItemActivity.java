@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.common.BaseActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,7 +29,7 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class ItemActivity extends AppCompatActivity implements ItemAdapter.OnItemClickListener {
+public class ItemActivity extends BaseActivity implements ItemAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
     private ItemAdapter itemAdapter;
@@ -49,12 +51,18 @@ public class ItemActivity extends AppCompatActivity implements ItemAdapter.OnIte
                 currentRoomId = extras.getInt("roomId");
             }
         } else {
-            //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
+            currentRoomId = savedInstanceState.getInt("roomId");
         }
 
         initRecyclerView();
         initUI();
         fetchData();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("roomId", currentRoomId);
     }
 
     private void fetchData() {
@@ -63,7 +71,8 @@ public class ItemActivity extends AppCompatActivity implements ItemAdapter.OnIte
         dialog.setMessage("Loading....");
         dialog.show();
 
-        StringRequest request = new StringRequest(getResources().getString(R.string.api_items) + currentRoomId, new Response.Listener<String>() {
+        String urlString = getResources().getString(R.string.api_inventory) + "item" + "?siteId=" + "1" + "&roomId=" + currentRoomId;
+        StringRequest request = new StringRequest(urlString, new Response.Listener<String>() {
             @Override
             public void onResponse(String string) {
                 string = new String(string.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
@@ -141,13 +150,6 @@ public class ItemActivity extends AppCompatActivity implements ItemAdapter.OnIte
         intent.putExtra("itemDescription", item.itemDescription);
 
         startActivity(intent);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("debug", "onResume/ItemsActivity");
-        //setAdapter();
     }
 
     private void setAdapter() {

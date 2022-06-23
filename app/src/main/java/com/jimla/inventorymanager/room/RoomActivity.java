@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.common.BaseActivity;
 import com.jimla.inventorymanager.item.ItemActivity;
 import com.jimla.inventorymanager.search.SearchActivity;
 
@@ -29,7 +31,7 @@ import org.json.JSONObject;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnItemClickListener {
+public class RoomActivity extends BaseActivity implements RoomAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
     private RoomAdapter roomAdapter;
@@ -53,12 +55,18 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
                 currentSiteId = extras.getInt("siteId");
             }
         } else {
-            //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
+            currentSiteId = savedInstanceState.getInt("siteId");
         }
 
         initRecyclerView();
         initUI();
         fetchData();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("siteId", currentSiteId);
     }
 
     private void fetchData() {
@@ -67,7 +75,8 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
         dialog.setMessage("Loading....");
         dialog.show();
 
-        StringRequest request = new StringRequest(getResources().getString(R.string.api_rooms) + currentSiteId, new Response.Listener<String>() {
+        String urlString = getResources().getString(R.string.api_inventory) + "room" + "?siteId=" + currentSiteId;
+        StringRequest request = new StringRequest(urlString, new Response.Listener<String>() {
             @Override
             public void onResponse(String string) {
                 string = new String(string.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
@@ -174,12 +183,6 @@ public class RoomActivity extends AppCompatActivity implements RoomAdapter.OnIte
         intent.putExtra("roomDescription", room.roomDescription);
 
         startActivity(intent);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("debug", "onResume/RoomActivity");
     }
 
     private void setAdapter() {

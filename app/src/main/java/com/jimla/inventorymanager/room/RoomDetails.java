@@ -9,12 +9,14 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.common.BaseActivity;
 import com.jimla.inventorymanager.item.ItemActivity;
 
-public class RoomDetails extends AppCompatActivity {
+public class RoomDetails extends BaseActivity {
 
     private TextView tvRoomDetailsHeader;
     private TextView tvRoomName;
@@ -46,7 +48,10 @@ public class RoomDetails extends AppCompatActivity {
                         extras.getString("roomDescription"));
             }
         } else {
-            //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
+            currentRoom = new Room(
+                    savedInstanceState.getInt("roomId"),
+                    savedInstanceState.getString("roomName"),
+                    savedInstanceState.getString("roomDescription"));
         }
 
         setupUI();
@@ -57,6 +62,14 @@ public class RoomDetails extends AppCompatActivity {
             setMode(Mode.VIEW);
             updateFieldsFromItem();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("roomId", currentRoom.roomId);
+        savedInstanceState.putString("roomName", currentRoom.roomName);
+        savedInstanceState.putString("roomDescription", currentRoom.roomDescription);
     }
 
     private void setMode(Mode mode) {

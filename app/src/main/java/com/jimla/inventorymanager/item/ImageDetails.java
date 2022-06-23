@@ -13,8 +13,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.common.BaseActivity;
 
-public class ImageDetails extends AppCompatActivity {
+public class ImageDetails extends BaseActivity {
 
     private TextView tvDescription;
     private Button btnDelete;

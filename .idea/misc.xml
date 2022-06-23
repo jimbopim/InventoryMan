@@ -57,7 +57,7 @@
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/drawable/edit_text_line.xml" value="0.2515" />
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/drawable/edit_text_selector.xml" value="0.2515" />
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/drawable/test.xml" value="0.2515" />
-        <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/activity_item_details.xml" value="0.5" />
+        <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/activity_item_details.xml" value="0.4739952718676123" />
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/activity_items.xml" value="0.1" />
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/activity_project.xml" value="0.33" />
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/activity_project_details.xml" value="0.22" />
@@ -66,8 +66,9 @@
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/activity_room_details.xml" value="0.1" />
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/activity_search.xml" value="0.31354166666666666" />
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/activity_view_image.xml" value="0.1" />
-        <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/main_row_item.xml" value="0.5279187817258884" />
-        <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/search_row_item.xml" value="0.67" />
+        <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/main_row_item.xml" value="0.5" />
+        <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/search_row_item.xml" value="0.5" />
+        <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/search_row_item_backup.xml" value="0.5456410256410257" />
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/spinner_item.xml" value="0.31354166666666666" />
         <entry key="..\:/dev/AndroidStudioProjects/InventoryMan/app/src/main/res/layout/testss.xml" value="0.31354166666666666" />
       </map>

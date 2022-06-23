@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,34 +18,21 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.common.BaseActivity;
 import com.jimla.inventorymanager.room.RoomActivity;
 import com.nordicid.nurapi.NurDeviceListActivity;
-import com.nordicid.nurapi.NurEventIOChange;
-import com.nordicid.nurapi.NurTag;
-import com.nordicid.nurapi.NurTagStorage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.X509TrustManager;
-
-public class SiteActivity extends AppCompatActivity implements SiteAdapter.OnItemClickListener, NurHandler.InventoryControllerListener {
+public class SiteActivity extends BaseActivity implements SiteAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
     private SiteAdapter siteAdapter;
-
-    TextView tvConnection;
 
     private final ArrayList<Site> sites = new ArrayList<>();
 
@@ -58,20 +43,9 @@ public class SiteActivity extends AppCompatActivity implements SiteAdapter.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site);
 
-        trustEveryone(); //TODO OBS ENDAST TESTSYFTE
         initRecyclerView();
         initUI();
         fetchData();
-        startReader();
-    }
-
-    private void startReader() {
-        NurHandler nurHandler = NurHandler.getInstance();
-        nurHandler.setInventoryControllerListener(this);
-
-        //nurHandler.selectDeviceForConnection(this); //TODO Flytta till settings
-        showOnUI(tvConnection, "Connecting reader...");
-        nurHandler.autoSelectConnection(this);
     }
 
     private void fetchData() {
@@ -80,7 +54,8 @@ public class SiteActivity extends AppCompatActivity implements SiteAdapter.OnIte
         dialog.setMessage("Loading....");
         dialog.show();
 
-        StringRequest request = new StringRequest(getResources().getString(R.string.api_sites), new Response.Listener<String>() {
+        String urlString = getString(R.string.api_inventory) + "site";
+        StringRequest request = new StringRequest(urlString, new Response.Listener<String>() {
             @Override
             public void onResponse(String string) {
                 string = new String(string.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
@@ -137,7 +112,6 @@ public class SiteActivity extends AppCompatActivity implements SiteAdapter.OnIte
     }
 
     private void initUI() {
-        tvConnection = findViewById(R.id.tvConn);
 
         Button buttonAdd = findViewById(R.id.button_add_new);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
@@ -173,30 +147,6 @@ public class SiteActivity extends AppCompatActivity implements SiteAdapter.OnIte
         startActivity(intent);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        NurHandler.getInstance().onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        NurHandler.getInstance().onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        NurHandler.getInstance().onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        NurHandler.getInstance().onResume();
-    }
-
     private void setAdapter() {
         SiteAdapter.OnItemClickListener listener = this;
         Thread thread = new Thread(new Runnable() {
@@ -221,34 +171,6 @@ public class SiteActivity extends AppCompatActivity implements SiteAdapter.OnIte
         }
     }
 
-    private void trustEveryone() { //TODO OBS ENDAST TESTSYFTE
-        try {
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-            SSLContext context = SSLContext.getInstance("TLS");
-            context.init(null, new X509TrustManager[]{new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {
-                }
-
-                public void checkServerTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {
-                }
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-            }}, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(
-                    context.getSocketFactory());
-        } catch (Exception e) { // should never happen
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)  {
         NurHandler nurHandler = NurHandler.getInstance();
@@ -265,42 +187,4 @@ public class SiteActivity extends AppCompatActivity implements SiteAdapter.OnIte
         super.onActivityResult(requestCode,resultCode,data);
     }
 
-    private void showOnUI(TextView textView, String text) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textView.setText(text);
-            }
-        });
-    }
-
-    @Override
-    public void tagFound(NurTag tag, boolean isNew) {
-
-    }
-
-    @Override
-    public void inventoryRoundDone(NurTagStorage storage, int newTagsOffset, int newTagsAdded) {
-
-    }
-
-    @Override
-    public void readerDisconnected() {
-        showOnUI(tvConnection, "Reader disconnected");
-    }
-
-    @Override
-    public void readerConnected() {
-        showOnUI(tvConnection, "Reader connected");
-    }
-
-    @Override
-    public void inventoryStateChanged() {
-
-    }
-
-    @Override
-    public void IOChangeEvent(NurEventIOChange event) {
-
-    }
 }

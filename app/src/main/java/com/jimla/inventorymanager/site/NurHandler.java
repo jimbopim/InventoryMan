@@ -64,6 +64,10 @@ public class NurHandler implements NurApiListener {
         return instance;
     }
 
+    public boolean isConnected() {
+        return connected;
+    }
+
     private NurHandler() {
         nurApi = new NurApi();
         nurApi.setListener(this);
@@ -409,22 +413,22 @@ public class NurHandler implements NurApiListener {
 
     }
 
-    protected void onPause() {
+    public void onPause() {
         if (mBLEAuto != null)
             mBLEAuto.onPause();
     }
 
-    protected void onStop() {
+    public void onStop() {
         if (mBLEAuto != null)
             mBLEAuto.onStop();
     }
 
-    protected void onDestroy() {
+    public void onDestroy() {
         if (mBLEAuto != null)
             mBLEAuto.onDestroy();
     }
 
-    protected void onResume() {
+    public void onResume() {
         if (mBLEAuto != null)
             mBLEAuto.onResume();
     }

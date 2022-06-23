@@ -22,6 +22,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -29,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jimla.inventorymanager.R;
+import com.jimla.inventorymanager.common.BaseActivity;
 import com.jimla.inventorymanager.site.NurHandler;
 
 import java.io.File;
@@ -37,7 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnItemClickListener {
+public class ItemDetails extends BaseActivity implements ImageAdapter.OnItemClickListener {
 
     private TextView tvItemDetailsHeader;
     private TextView tvItemName;
@@ -82,7 +84,10 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
                         extras.getString("itemDescription"));
             }
         } else {
-            //contact = (Contact) savedInstanceState.getSerializable("CONTACT");
+            currentItem = new Item(
+                    savedInstanceState.getInt("itemId"),
+                    savedInstanceState.getString("itemName"),
+                    savedInstanceState.getString("itemDescription"));
         }
 
         initRecyclerView();
@@ -109,6 +114,14 @@ public class ItemDetails extends AppCompatActivity implements ImageAdapter.OnIte
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("itemId", currentItem.itemId);
+        savedInstanceState.putString("itemName", currentItem.itemName);
+        savedInstanceState.putString("itemDescription", currentItem.itemDescription);
     }
 
 /*    private void initDB() {

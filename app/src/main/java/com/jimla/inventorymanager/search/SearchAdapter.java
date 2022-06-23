@@ -20,6 +20,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvName;
         private final TextView tvDescription;
+        private final TextView tvItemId;
         private final TextView tvRoomId;
 
         public ViewHolder(View view, OnItemClickListener listener) {
@@ -42,6 +43,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
             tvName = view.findViewById(R.id.name);
             tvDescription = view.findViewById(R.id.description);
+            tvItemId = view.findViewById(R.id.tvItemId);
             tvRoomId = view.findViewById(R.id.tvRoom);
         }
 
@@ -53,7 +55,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             return tvDescription;
         }
 
-        private TextView getRoom() {
+        private TextView getItem() {
+            return tvItemId;
+        }
+
+        private TextView getRoomId() {
             return tvRoomId;
         }
     }
@@ -77,7 +83,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         Item item = this.items.get(position);
         viewHolder.getName().setText(item.itemName);
         viewHolder.getDescription().setText(item.itemDescription);
-        viewHolder.getRoom().setText(String.valueOf(item.roomId));
+        String itemId = "Item: " + item.itemId;
+        viewHolder.getItem().setText(itemId);
+        String roomId = "Room: " + item.roomId;
+        viewHolder.getRoomId().setText(roomId);
     }
 
     @Override
