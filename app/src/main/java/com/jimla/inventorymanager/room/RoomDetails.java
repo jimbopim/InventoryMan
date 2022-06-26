@@ -18,7 +18,6 @@ import com.jimla.inventorymanager.item.ItemActivity;
 
 public class RoomDetails extends BaseActivity {
 
-    private TextView tvRoomDetailsHeader;
     private TextView tvRoomName;
     private NumberPicker pkrFloor;
     private TextView tvDescription;
@@ -37,7 +36,7 @@ public class RoomDetails extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room_details);
+        //setContentView(R.layout.activity_room_details);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -65,6 +64,11 @@ public class RoomDetails extends BaseActivity {
     }
 
     @Override
+    public int getLayoutResource() {
+        return R.layout.activity_room_details;
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt("roomId", currentRoom.roomId);
@@ -88,7 +92,7 @@ public class RoomDetails extends BaseActivity {
                 pkrFloor.setFocusable(true);
                 pkrFloor.setFocusableInTouchMode(true);
                 pkrFloor.setEnabled(true);
-                tvRoomDetailsHeader.setText(getString(R.string.room_create));
+                setHeader1Text(getString(R.string.room_create));
                 break;
             case EDIT:
                 tvRoomName.setFocusable(true);
@@ -100,7 +104,7 @@ public class RoomDetails extends BaseActivity {
                 btnDelete.setVisibility(View.VISIBLE);
                 pkrFloor.setFocusable(true);
                 pkrFloor.setFocusableInTouchMode(true);
-                tvRoomDetailsHeader.setText(getString(R.string.room_edit));
+                setHeader1Text(getString(R.string.room_edit));
                 pkrFloor.setEnabled(true);
                 btnEdit.setText(getString(R.string.save_button));
                 break;
@@ -112,7 +116,7 @@ public class RoomDetails extends BaseActivity {
                 btnCreate.setVisibility(View.INVISIBLE);
                 btnOpenRooms.setVisibility(View.VISIBLE);
                 btnDelete.setVisibility(View.INVISIBLE);
-                tvRoomDetailsHeader.setText(getString(R.string.room_view));
+                setHeader1Text(getString(R.string.room_view));
                 pkrFloor.setFocusable(false);
                 pkrFloor.setFocusableInTouchMode(false);
                 pkrFloor.setEnabled(false);
@@ -122,7 +126,6 @@ public class RoomDetails extends BaseActivity {
     }
 
     private void setupUI() {
-        tvRoomDetailsHeader = findViewById(R.id.tvRoomDetailsHeader);
         tvRoomName = findViewById(R.id.etRoomName);
         pkrFloor = findViewById(R.id.floorPicker);
         tvDescription = findViewById(R.id.etDescription);

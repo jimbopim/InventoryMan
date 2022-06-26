@@ -5,26 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvItemDetailsHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Item Details Header"
-        android:textSize="@dimen/details_header_text_size"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvItemDetailsHeader">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,32 +26,32 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:backgroundTint="@drawable/edit_text_line"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:minHeight="48dp"
+                android:textColor="@drawable/edit_text_selector"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Name"
-                android:backgroundTint="@drawable/edit_text_line"
-                android:textColor="@drawable/edit_text_selector" />
+                tools:text="Name" />
 
             <EditText
                 android:id="@+id/etDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:backgroundTint="@drawable/edit_text_line"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
                 android:minHeight="48dp"
+                android:textColor="@drawable/edit_text_selector"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="@+id/etItemName"
                 app:layout_constraintStart_toStartOf="@+id/etItemName"
                 app:layout_constraintTop_toBottomOf="@+id/etRfid"
-                tools:text="Description"
-                android:backgroundTint="@drawable/edit_text_line"
-                android:textColor="@drawable/edit_text_selector" />
+                tools:text="Description" />
 
             <EditText
                 android:id="@+id/etRfid"
@@ -72,17 +59,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:backgroundTint="@drawable/edit_text_line"
+                android:enabled="false"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:minHeight="48dp"
+                android:textColor="@drawable/edit_text_selector"
                 android:textSize="20sp"
-                android:enabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/etItemName"
                 app:layout_constraintTop_toBottomOf="@+id/etItemName"
-                tools:text="RFID"
-                android:backgroundTint="@drawable/edit_text_line"
-                android:textColor="@drawable/edit_text_selector" />
+                tools:text="RFID" />
 
             <Spinner
                 android:id="@+id/spItemType"
@@ -93,7 +80,7 @@
                 android:minHeight="48dp"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/etDescription"
-                app:layout_constraintTop_toBottomOf="@+id/etDescription"/>
+                app:layout_constraintTop_toBottomOf="@+id/etDescription" />
 
             <Spinner
                 android:id="@+id/spCondition"

@@ -23,7 +23,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jimla.inventorymanager.R;
 import com.jimla.inventorymanager.common.BaseActivity;
-import com.jimla.inventorymanager.site.NurHandler;
+import com.jimla.inventorymanager.common.NurHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +40,6 @@ import java.util.Date;
 
 public class ItemDetails extends BaseActivity implements ImageAdapter.OnItemClickListener {
 
-    private TextView tvItemDetailsHeader;
     private TextView tvItemName;
     private TextView tvItemDescription;
     private TextView tvItemRfid;
@@ -73,7 +71,7 @@ public class ItemDetails extends BaseActivity implements ImageAdapter.OnItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item_details);
+        //setContentView(R.layout.activity_item_details);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -114,6 +112,11 @@ public class ItemDetails extends BaseActivity implements ImageAdapter.OnItemClic
                         }
                     }
                 });
+    }
+
+    @Override
+    public int getLayoutResource() {
+        return R.layout.activity_item_details;
     }
 
     @Override
@@ -164,7 +167,7 @@ public class ItemDetails extends BaseActivity implements ImageAdapter.OnItemClic
                 btnDelete.setVisibility(View.INVISIBLE);
                 btnEdit.setVisibility(View.INVISIBLE);
                 btnCreate.setVisibility(View.VISIBLE);
-                tvItemDetailsHeader.setText(getString(R.string.item_create));
+                setHeader1Text(getString(R.string.item_create));
                 tvItemName.setEnabled(true);
                 tvItemDescription.setEnabled(true);
                 break;
@@ -181,7 +184,7 @@ public class ItemDetails extends BaseActivity implements ImageAdapter.OnItemClic
                 btnDelete.setVisibility(View.VISIBLE);
                 btnEdit.setText(getString(R.string.save_button));
                 btnCreate.setVisibility(View.INVISIBLE);
-                tvItemDetailsHeader.setText(getString(R.string.item_edit));
+                setHeader1Text(getString(R.string.item_edit));
                 tvItemName.setEnabled(true);
                 tvItemDescription.setEnabled(true);
                 break;
@@ -198,7 +201,7 @@ public class ItemDetails extends BaseActivity implements ImageAdapter.OnItemClic
                 btnDelete.setVisibility(View.INVISIBLE);
                 btnEdit.setText(getString(R.string.edit_button));
                 btnCreate.setVisibility(View.INVISIBLE);
-                tvItemDetailsHeader.setText(getString(R.string.item_view));
+                setHeader1Text(getString(R.string.item_view));
                 tvItemName.setEnabled(false);
                 tvItemDescription.setEnabled(false);
                 break;
@@ -215,7 +218,7 @@ public class ItemDetails extends BaseActivity implements ImageAdapter.OnItemClic
                 btnDelete.setVisibility(View.INVISIBLE);
                 btnEdit.setText("Return");
                 btnCreate.setVisibility(View.INVISIBLE);
-                tvItemDetailsHeader.setText("Scan Tag");
+                setHeader1Text("Scan Tag");
                 tvItemName.setEnabled(false);
                 tvItemDescription.setEnabled(false);
                 break;
@@ -223,7 +226,6 @@ public class ItemDetails extends BaseActivity implements ImageAdapter.OnItemClic
     }
 
     private void setupUI() {
-        tvItemDetailsHeader = findViewById(R.id.tvItemDetailsHeader);
         tvItemName = findViewById(R.id.etItemName);
         tvItemDescription = findViewById(R.id.etDescription);
         tvItemRfid = findViewById(R.id.etRfid);

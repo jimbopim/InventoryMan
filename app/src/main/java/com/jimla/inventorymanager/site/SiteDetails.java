@@ -17,7 +17,6 @@ import com.jimla.inventorymanager.room.RoomActivity;
 
 public class SiteDetails extends BaseActivity {
 
-    private TextView tvSiteDetailsHeader;
     private TextView tvSiteName;
     private TextView tvSiteDescription;
     private Button btnOpenRooms;
@@ -35,7 +34,7 @@ public class SiteDetails extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_site_details);
+        //setContentView(R.layout.activity_site_details);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -67,6 +66,11 @@ public class SiteDetails extends BaseActivity {
     }
 
     @Override
+    public int getLayoutResource() {
+        return R.layout.activity_site_details;
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt("siteId", currentSite.siteId);
@@ -90,7 +94,7 @@ public class SiteDetails extends BaseActivity {
                 btnEdit.setVisibility(View.INVISIBLE);
                 btnCreate.setVisibility(View.VISIBLE);
                 btnOpenRooms.setVisibility(View.INVISIBLE);
-                tvSiteDetailsHeader.setText(getString(R.string.site_create));
+                setHeader1Text(getString(R.string.site_create));
                 break;
             case EDIT:
                 tvSiteName.setFocusable(true);
@@ -100,7 +104,7 @@ public class SiteDetails extends BaseActivity {
                 btnCreate.setVisibility(View.INVISIBLE);
                 btnOpenRooms.setVisibility(View.INVISIBLE);
                 btnDelete.setVisibility(View.VISIBLE);
-                tvSiteDetailsHeader.setText(getString(R.string.site_edit));
+                setHeader1Text(getString(R.string.site_edit));
                 btnEdit.setText(getString(R.string.save_button));
                 break;
             case VIEW:
@@ -111,14 +115,13 @@ public class SiteDetails extends BaseActivity {
                 btnCreate.setVisibility(View.INVISIBLE);
                 btnOpenRooms.setVisibility(View.VISIBLE);
                 btnDelete.setVisibility(View.INVISIBLE);
-                tvSiteDetailsHeader.setText(getString(R.string.site_view));
+                setHeader1Text(getString(R.string.site_view));
                 btnEdit.setText(getString(R.string.edit_button));
                 break;
         }
     }
 
     private void setupUI() {
-        tvSiteDetailsHeader = findViewById(R.id.tvSiteDetailsHeader);
         tvSiteName = findViewById(R.id.etSiteName);
         tvSiteDescription = findViewById(R.id.etDescription);
         btnOpenRooms = findViewById(R.id.openItemsButton);

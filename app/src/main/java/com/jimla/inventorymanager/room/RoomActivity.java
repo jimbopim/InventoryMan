@@ -47,7 +47,8 @@ public class RoomActivity extends BaseActivity implements RoomAdapter.OnItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room);
+        //setContentView(R.layout.activity_room);
+        setHeader1Text(getString(R.string.rooms_list_header));
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -61,6 +62,11 @@ public class RoomActivity extends BaseActivity implements RoomAdapter.OnItemClic
         initRecyclerView();
         initUI();
         fetchData();
+    }
+
+    @Override
+    public int getLayoutResource() {
+        return R.layout.activity_room;
     }
 
     @Override

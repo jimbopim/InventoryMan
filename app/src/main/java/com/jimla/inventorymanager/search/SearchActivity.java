@@ -56,7 +56,8 @@ public class SearchActivity extends BaseActivity implements SearchAdapter.OnItem
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        //setContentView(R.layout.activity_search);
+        setHeader1Text(getString(R.string.search_item));
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -73,6 +74,11 @@ public class SearchActivity extends BaseActivity implements SearchAdapter.OnItem
 
         if(restoredSearchString != null)
             fetchData();
+    }
+
+    @Override
+    public int getLayoutResource() {
+        return R.layout.activity_search;
     }
 
     @Override

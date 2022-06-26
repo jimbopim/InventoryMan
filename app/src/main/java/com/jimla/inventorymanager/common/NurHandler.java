@@ -1,4 +1,4 @@
-package com.jimla.inventorymanager.site;
+package com.jimla.inventorymanager.common;
 
 import android.app.Activity;
 import android.content.Context;

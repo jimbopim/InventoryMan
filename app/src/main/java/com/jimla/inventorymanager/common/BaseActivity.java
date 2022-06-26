@@ -1,11 +1,15 @@
 package com.jimla.inventorymanager.common;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.jimla.inventorymanager.site.NurHandler;
+import com.jimla.inventorymanager.R;
 import com.nordicid.nurapi.NurEventIOChange;
 import com.nordicid.nurapi.NurTag;
 import com.nordicid.nurapi.NurTagStorage;
@@ -20,22 +24,47 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-public class BaseActivity extends AppCompatActivity implements NurHandler.InventoryControllerListener {
+public abstract class BaseActivity extends AppCompatActivity implements NurHandler.InventoryControllerListener {
 
-    //TextView tvConnection;
+    TextView tvHeader1;
+    TextView tvHeader2;
+    TextView tvConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_site);
+        setContentView(R.layout.activity_base);
+        inflateLayout();
 
         trustEveryone(); //TODO OBS ENDAST TESTSYFTE
         initUI();
         startReader();
     }
 
+    public abstract int getLayoutResource();
+
+    private void inflateLayout() {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ViewGroup insertPoint = findViewById(R.id.content_holder);
+        inflater.inflate(getLayoutResource(), insertPoint);
+    }
+
+    private void setConnectionText(String text) {
+        tvConnection.setText(text);
+    }
+
+    public void setHeader1Text(String text) {
+        tvHeader1.setText(text);
+    }
+
+    public void setHeader2Text(String text) {
+        tvHeader2.setText(text);
+    }
+
     private void initUI() {
-        //tvConnection = findViewById(R.id.tvConn);
+        tvConnection = findViewById(R.id.tvConnectionStatus);
+        tvHeader1 = findViewById(R.id.tvHeader1);
+        tvHeader2 = findViewById(R.id.tvHeader2);
     }
 
     private void startReader() {
@@ -44,18 +73,9 @@ public class BaseActivity extends AppCompatActivity implements NurHandler.Invent
 
         if(!nurHandler.isConnected()) {
             //nurHandler.selectDeviceForConnection(this); //TODO Flytta till settings
-            //showOnUI(tvConnection, "Connecting reader...");
+            setConnectionText("Connecting reader...");
             nurHandler.autoSelectConnection(this);
         }
-    }
-
-    private void showOnUI(TextView textView, String text) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textView.setText(text);
-            }
-        });
     }
 
     private void trustEveryone() { //TODO OBS ENDAST TESTSYFTE
@@ -122,12 +142,12 @@ public class BaseActivity extends AppCompatActivity implements NurHandler.Invent
 
     @Override
     public void readerDisconnected() {
-        //showOnUI(tvConnection, "Reader disconnected");
+        setConnectionText("Reader disconnected");
     }
 
     @Override
     public void readerConnected() {
-        //showOnUI(tvConnection, "Reader connected");
+        setConnectionText("Reader connected");
     }
 
     @Override

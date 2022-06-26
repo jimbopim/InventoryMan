@@ -43,7 +43,8 @@ public class ItemActivity extends BaseActivity implements ItemAdapter.OnItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_items);
+        //setContentView(R.layout.activity_items);
+        setHeader1Text(getString(R.string.items_list_header));
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -57,6 +58,11 @@ public class ItemActivity extends BaseActivity implements ItemAdapter.OnItemClic
         initRecyclerView();
         initUI();
         fetchData();
+    }
+
+    @Override
+    public int getLayoutResource() {
+        return R.layout.activity_items;
     }
 
     @Override

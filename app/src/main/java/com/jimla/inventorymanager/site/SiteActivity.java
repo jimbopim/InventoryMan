@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jimla.inventorymanager.R;
 import com.jimla.inventorymanager.common.BaseActivity;
+import com.jimla.inventorymanager.common.NurHandler;
 import com.jimla.inventorymanager.room.RoomActivity;
 import com.nordicid.nurapi.NurDeviceListActivity;
 
@@ -41,11 +42,17 @@ public class SiteActivity extends BaseActivity implements SiteAdapter.OnItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_site);
+        //setContentView(R.layout.activity_site);
+        setHeader1Text(getString(R.string.sites_list_header));
 
         initRecyclerView();
         initUI();
         fetchData();
+    }
+
+    @Override
+    public int getLayoutResource() {
+        return R.layout.activity_site;
     }
 
     private void fetchData() {

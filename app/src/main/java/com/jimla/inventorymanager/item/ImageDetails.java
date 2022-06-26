@@ -31,7 +31,7 @@ public class ImageDetails extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_image);
+        //setContentView(R.layout.activity_view_image);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -50,6 +50,11 @@ public class ImageDetails extends BaseActivity {
             setMode(Mode.VIEW);
             updateFieldsFromItem();
         }
+    }
+
+    @Override
+    public int getLayoutResource() {
+        return R.layout.activity_view_image;
     }
 
     private void setMode(Mode mode) {
